@@ -66,9 +66,9 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  */
 fun ageDescription(age: Int): String {
     return when {
-        age%100 == 1 || age%100 == 21  -> "$age год"
-        age%100 >= 5 && age%100 <= 20 || age%10 == 0 -> "$age лет"
-        age%10 == 2 -> "$age года"
+        age % 100 == 1 || age % 100 == 21 -> "$age год"
+        age % 100 >= 5 && age % 100 <= 20 || age % 10 == 0 -> "$age лет"
+        age % 10 == 2 -> "$age года"
         else -> "$age лет"
     }
 }
@@ -85,22 +85,22 @@ fun timeForHalfWay(
     t2: Double, v2: Double,
     t3: Double, v3: Double
 ): Double {
-    val S = ( t1*v1 + t2*v2 + t3*v3 ) / 2
-    val s1 = t1*v1
-    val s2 = t2*v2
+    val S = (t1 * v1 + t2 * v2 + t3 * v3) / 2
+    val s1 = t1 * v1
+    val s2 = t2 * v2
     var T = 0.0
     if (S / v1 <= t1) {
         return S / v1
     } else {
         T = t1
     }
-    if ( (S - s1) / v2 <= t2) {
+    if ((S - s1) / v2 <= t2) {
         T += (S - s1) / v2
         return T
     } else {
         T += t2
     }
-    T += ((S-s1-s2)/v3)
+    T += ((S - s1 - s2) / v3)
     return T
 }
 
@@ -117,7 +117,7 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
-): Int =  when {
+): Int = when {
     (kingX == rookX1 || kingY == rookY1) && (kingX == rookX2 || kingY == rookY2) -> 3
     kingX == rookX1 || kingY == rookY1 -> 1
     kingX == rookX2 || kingY == rookY2 -> 2
@@ -140,9 +140,9 @@ fun rookOrBishopThreatens(
     bishopX: Int, bishopY: Int
 ): Int {
     var isBishop = false
-    var bX = bishopX+8
-    var bY = bishopY+8
-    if (abs(kingX-bishopX) == abs(bishopY-kingY))
+    var bX = bishopX + 8
+    var bY = bishopY + 8
+    if (abs(kingX - bishopX) == abs(bishopY - kingY))
         isBishop = true
     return when {
         (kingX == rookX || kingY == rookY) && isBishop -> 3
@@ -164,11 +164,11 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     var A = 0.0
     var B = 0.0
     var C = 0.0
-    if (a>b && a>=c){
+    if (a > b && a >= c) {
         A = a
         B = b
         C = c
-    } else if (b>=a && b>=c){
+    } else if (b >= a && b >= c) {
         A = b
         B = a
         C = c
@@ -179,8 +179,8 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     }
     return when {
         A > B + C -> -1
-        A*A == B*B+C*C -> 1
-        A*A > B*B+C*C -> 2
+        A * A == B * B + C * C -> 1
+        A * A > B * B + C * C -> 2
         else -> 0
     }
 }
@@ -194,9 +194,9 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    if (a>d || c>b) return -1;
-    if (a>d) return d-c
-    if (d>b) return b-a
-    if (a<c) return b-c
-    return d-a
+    if (a > d || c > b) return -1;
+    if (a > d) return d - c
+    if (d > b) return b - a
+    if (a < c) return b - c
+    return d - a
 }
