@@ -245,4 +245,25 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    var numbers =
+        listOf(
+            "", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять", "десять", "одиннадцать",
+            "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать",
+            "девятнадцать", "двадцать"
+        )
+    var power = listOf("","тысяча")
+    var triangles = mutableListOf<Int>()
+    var temp = n
+    while (temp > 0) {
+        triangles.add(temp % 1000)
+        temp /= 1000
+    }
+
+
+    for (i in triangles.size-1 downTo 0){
+        println("${triangles[i]} ${power[i]}")
+    }
+
+    return "123"
+}

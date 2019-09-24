@@ -197,17 +197,9 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * этого для какого-либо начального X > 0.
  */
 fun collatzSteps(x: Int): Int {
-    var step = 0
-    var current = x
-    while (current != 1) {
-        if (current % 2 == 0) {
-            current /= 2
-        } else {
-            current = 3 * current + 1
-        }
-        step++
-    }
-    return step
+    return if (x == 1) 0
+    else if (x % 2 == 0) 1 + collatzSteps(x / 2)
+    else 1 + collatzSteps(3 * x + 1)
 }
 
 /**
@@ -220,16 +212,32 @@ fun collatzSteps(x: Int): Int {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    val myX = x % Math.PI;
+    var myX = x
+    while (myX > 2 * Math.PI) {
+        myX -= 2 * Math.PI
+    }
+    while (myX < 2 * Math.PI) {
+        myX += 2 * Math.PI
+    }
     var acc = 0.0
     var An = 0.0
-    var step = 1;
+    var step = 0.0;
+    val fac = fun(value: Double): Double {
+        var v = value
+        var acc = 1.0;
+        while (v > 0) {
+            acc *= v
+            v -= 1
+        }
+        return acc
+    }
     do {
-        var ex = 1 + 2 * (step - 1)
-        An = (-1.0).pow(step) * (x.pow(ex) / factorial(ex))
+        var ex = (2 * step + 1)
+        An = (-1.0).pow(step) * (myX.pow(ex) / fac(ex))
         acc += An
-        step++
-    } while (Math.abs(An) < eps)
+        //println("x=$x \t myX = $myX \t step = $step \t ex = $ex \t An = $An \t acc = $acc \t fac = ${fac(ex)}")
+        step += 1
+    } while (Math.abs(An) > eps)
     return acc
 }
 
@@ -242,7 +250,35 @@ fun sin(x: Double, eps: Double): Double {
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double {
+    var myX = x
+    while (myX > 2 * Math.PI) {
+        myX -= 2 * Math.PI
+    }
+    while (myX < 2 * Math.PI) {
+        myX += 2 * Math.PI
+    }
+    var acc = 0.0
+    var An = 0.0
+    var step = 0.0;
+    val fac = fun(value: Double): Double {
+        var v = value
+        var acc = 1.0;
+        while (v > 0) {
+            acc *= v
+            v -= 1
+        }
+        return acc
+    }
+    do {
+        var ex = (2 * step)
+        An = (-1.0).pow(step) * (myX.pow(ex) / fac(ex))
+        acc += An
+        //println("x=$x \t myX = $myX \t step = $step \t ex = $ex \t An = $An \t acc = $acc \t fac = ${fac(ex)}")
+        step += 1
+    } while (Math.abs(An) > eps)
+    return acc
+}
 
 /**
  * Средняя
@@ -310,32 +346,19 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun squareSequenceDigit(n: Int): Int {
-
-    val len = fun(number: Int): Int {
-        var n = number;
-        var c = 0
-        while (n > 0) {
-            c++
-            n /= 10
-        }
-        return c
-    }
-
-    var c = 0
-    var num = 0
+    var out = 0
     for (i in 1..Int.MAX_VALUE) {
-        num = i * i
-        c += len(num)
-        if (c > n) {
-            var needN = n - c
+        var num = i * i
+        val dn = digitNumber(num)
+        println(num)
+        while (num > 0) {
 
-            while (needN > 0) {
-                num /= 10
-                needN--
-            }
+            out++
+            if (out == n) return (num % 10)
+            num /= 10
         }
     }
-    return num % 10
+    return -1
 }
 
 /**
