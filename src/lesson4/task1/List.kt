@@ -115,14 +115,27 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = TODO()
+fun abs(v: List<Double>): Double {
+    var m = 0.0
+    for (i in v) {
+        m += i * i
+    }
+    return sqrt(m)
+}
 
 /**
  * Простая
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = TODO()
+fun mean(list: List<Double>): Double {
+    if (list.isEmpty())
+        return 0.0
+    var m = 0.0
+    for (i in list)
+        m += i
+    return m / list.size
+}
 
 /**
  * Средняя
@@ -132,7 +145,18 @@ fun mean(list: List<Double>): Double = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> = TODO()
+fun center(list: MutableList<Double>): MutableList<Double> {
+
+    if (list.isEmpty())
+        return list
+    var m = 0.0
+    for (i in list)
+        m += i
+    m /= list.size
+    list.forEachIndexed { index, d -> list[index] -= m }
+
+    return list
+}
 
 /**
  * Средняя
@@ -141,7 +165,11 @@ fun center(list: MutableList<Double>): MutableList<Double> = TODO()
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
-fun times(a: List<Int>, b: List<Int>): Int = TODO()
+fun times(a: List<Int>, b: List<Int>): Int {
+    var m = 0
+    a.forEachIndexed({ i, d -> m += a[i] * b[i] })
+    return m
+}
 
 /**
  * Средняя
@@ -151,7 +179,13 @@ fun times(a: List<Int>, b: List<Int>): Int = TODO()
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int = TODO()
+fun polynom(p: List<Int>, x: Int): Int {
+    var m = 0
+    var myX = 1;
+    p.forEachIndexed { i, d -> m += p[i] * myX;
+        myX *= x }
+    return m
+}
 
 /**
  * Средняя
@@ -252,7 +286,7 @@ fun russian(n: Int): String {
             "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать",
             "девятнадцать", "двадцать"
         )
-    var power = listOf("","тысяча")
+    var power = listOf("", "тысяча")
     var triangles = mutableListOf<Int>()
     var temp = n
     while (temp > 0) {
@@ -261,7 +295,7 @@ fun russian(n: Int): String {
     }
 
 
-    for (i in triangles.size-1 downTo 0){
+    for (i in triangles.size - 1 downTo 0) {
         println("${triangles[i]} ${power[i]}")
     }
 

@@ -123,7 +123,7 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    for (divider in 2..n) {
+    for (divider in 2..n/2) {
         if (n % divider == 0)
             return divider
     }
@@ -136,8 +136,7 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (divider in n - 1 downTo 1) {
-
+    for (divider in n/2  downTo 1) {
         if (n % divider == 0)
             return divider
     }
@@ -348,13 +347,11 @@ fun hasDifferentDigits(n: Int): Boolean {
 fun squareSequenceDigit(n: Int): Int {
     var out = 0
     for (i in 1..Int.MAX_VALUE) {
-        var num = i * i
-        val dn = digitNumber(num)
-        println(num)
+        var num = if (i*i%10 == 0) revert(i*i + 1 ) else revert(i*i)
         while (num > 0) {
-
             out++
-            if (out == n) return (num % 10)
+            if (out == n)
+                return (num % 10)
             num /= 10
         }
     }
@@ -370,4 +367,16 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var out = 0
+    for (i in 1..Int.MAX_VALUE) {
+        var num = if (fib(i)%10 == 0) revert(fib(i) + 1 ) else revert(fib(i))
+        while (num > 0) {
+            out++
+            if (out == n)
+                return (num % 10)
+            num /= 10
+        }
+    }
+    return -1
+}
