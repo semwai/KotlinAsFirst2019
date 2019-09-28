@@ -182,8 +182,10 @@ fun times(a: List<Int>, b: List<Int>): Int {
 fun polynom(p: List<Int>, x: Int): Int {
     var m = 0
     var myX = 1;
-    p.forEachIndexed { i, d -> m += p[i] * myX;
-        myX *= x }
+    p.forEachIndexed { i, d ->
+        m += p[i] * myX;
+        myX *= x
+    }
     return m
 }
 
@@ -197,7 +199,14 @@ fun polynom(p: List<Int>, x: Int): Int {
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun accumulate(list: MutableList<Int>): MutableList<Int> = TODO()
+fun accumulate(list: MutableList<Int>): MutableList<Int> {
+    var acc = 0
+    list.forEachIndexed { index, i ->
+        acc += i
+        list[index] = acc
+    }
+    return list
+}
 
 /**
  * Средняя
@@ -206,7 +215,21 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> = TODO()
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
-fun factorize(n: Int): List<Int> = TODO()
+fun factorize(n: Int): List<Int> {
+    var outlist = mutableListOf<Int>()
+    var number = n
+    while (number > 1) {
+        for (i in 2..(number)) {
+            if (number % i == 0) {
+                number /= i;
+                outlist.add(i)
+                break
+            }
+        }
+
+    }
+    return outlist
+}
 
 /**
  * Сложная
@@ -215,7 +238,7 @@ fun factorize(n: Int): List<Int> = TODO()
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String = TODO()
+fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*")
 
 /**
  * Средняя
@@ -224,7 +247,16 @@ fun factorizeToString(n: Int): String = TODO()
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int> = TODO()
+fun convert(n: Int, base: Int): List<Int> {
+    var myList = mutableListOf<Int>()
+    var num = n
+
+    while (num > 0) {
+        myList.add(num % base)
+        num /= base
+    }
+    return myList.reversed()
+}
 
 /**
  * Сложная
@@ -237,7 +269,11 @@ fun convert(n: Int, base: Int): List<Int> = TODO()
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, n.toString(base) и подобные), запрещается.
  */
-fun convertToString(n: Int, base: Int): String = TODO()
+fun convertToString(n: Int, base: Int): String {
+    var out = buildString { }
+    convert(n, base).forEach { out += if (it < 10) it else (it + 87).toChar() }
+    return out
+}
 
 /**
  * Средняя
@@ -246,7 +282,13 @@ fun convertToString(n: Int, base: Int): String = TODO()
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+    var b = 1
+    var out = 0
+    digits.reversed().forEach { out += it * b; b *= base }
+    return out
+
+}
 
 /**
  * Сложная
@@ -260,7 +302,17 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO()
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, str.toInt(base)), запрещается.
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+    var myStr = str.reversed()
+    var b = 1
+    var out = 0
+    myStr.forEach {
+        out += if (it.toInt() < 65) (it.toInt() - 48) * b
+        else (it.toInt() - 87) * b;
+        b *= base
+    }
+    return out
+}
 
 /**
  * Сложная
@@ -280,7 +332,7 @@ fun roman(n: Int): String = TODO()
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String {
-    var numbers =
+    /*var numbers =
         listOf(
             "", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять", "десять", "одиннадцать",
             "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать",
@@ -297,7 +349,7 @@ fun russian(n: Int): String {
 
     for (i in triangles.size - 1 downTo 0) {
         println("${triangles[i]} ${power[i]}")
-    }
+    }*/
 
-    return "123"
+    return TODO()
 }
