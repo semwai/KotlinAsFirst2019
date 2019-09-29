@@ -248,6 +248,8 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
+    if (n == 0)
+        return listOf(0)
     var myList = mutableListOf<Int>()
     var num = n
 
@@ -270,6 +272,7 @@ fun convert(n: Int, base: Int): List<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String {
+    if (n == 0) return "0"
     var out = buildString { }
     convert(n, base).forEach { out += if (it < 10) it else (it + 87).toChar() }
     return out

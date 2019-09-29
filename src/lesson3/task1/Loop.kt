@@ -91,7 +91,7 @@ fun fib(n: Int): Int {
     var N = n
     while (N > 0) {
         acc = f2
-        f2 = f1 + f2
+        f2 += f1
         f1 = acc
         N--;
     }
@@ -105,16 +105,11 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var value = when {
-        m > n -> m
-        else -> n
+    for (i in minOf(m, n) downTo 1) {
+        if (m % i == 0 && n % i == 0)
+            return m * n / i
     }
-    do {
-        if (value % m == 0 && value % n == 0)
-            return value
-        value++
-    } while (value != Int.MAX_VALUE)
-    return 0;
+    return m * n;
 }
 
 /**
@@ -173,7 +168,7 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
     val min = Math.floor(Math.sqrt(m.toDouble())).toInt()
     val max = Math.ceil(Math.sqrt(m.toDouble())).toInt()
     for (i in min..max) {
-        if (i * i >= m && i * i <= n)
+        if (i * i in m..n)
             return true
     }
     return false
@@ -219,7 +214,7 @@ fun sin(x: Double, eps: Double): Double {
         myX += 2 * Math.PI
     }
     var acc = 0.0
-    var An = 0.0
+    var an = 0.0
     var step = 0.0;
     val fac = fun(value: Double): Double {
         var v = value
@@ -232,11 +227,11 @@ fun sin(x: Double, eps: Double): Double {
     }
     do {
         var ex = (2 * step + 1)
-        An = (-1.0).pow(step) * (myX.pow(ex) / fac(ex))
-        acc += An
+        an = (-1.0).pow(step) * (myX.pow(ex) / fac(ex))
+        acc += an
         //println("x=$x \t myX = $myX \t step = $step \t ex = $ex \t An = $An \t acc = $acc \t fac = ${fac(ex)}")
         step += 1
-    } while (Math.abs(An) > eps)
+    } while (Math.abs(an) > eps)
     return acc
 }
 
@@ -258,7 +253,7 @@ fun cos(x: Double, eps: Double): Double {
         myX += 2 * Math.PI
     }
     var acc = 0.0
-    var An = 0.0
+    var an = 0.0
     var step = 0.0;
     val fac = fun(value: Double): Double {
         var v = value
@@ -271,11 +266,10 @@ fun cos(x: Double, eps: Double): Double {
     }
     do {
         var ex = (2 * step)
-        An = (-1.0).pow(step) * (myX.pow(ex) / fac(ex))
-        acc += An
-        //println("x=$x \t myX = $myX \t step = $step \t ex = $ex \t An = $An \t acc = $acc \t fac = ${fac(ex)}")
+        an = (-1.0).pow(step) * (myX.pow(ex) / fac(ex))
+        acc += an
         step += 1
-    } while (Math.abs(An) > eps)
+    } while (Math.abs(an) > eps)
     return acc
 }
 
@@ -294,9 +288,7 @@ fun revert(n: Int): Int {
         input /= 10
         step++
     } while (input > 0)
-
     input = n
-
     do {
         out += ((input % 10).toFloat() * 10.0.pow(step - 1)).toInt()
         input /= 10
