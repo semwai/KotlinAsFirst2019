@@ -2,7 +2,9 @@
 
 package lesson3.task1
 
+import kotlin.math.abs
 import kotlin.math.pow
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 /**
@@ -70,11 +72,11 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int {
     var acc = 0
-    var N = if (n > 0) n else -n
+    var num = abs(n)
     do {
-        N /= 10
+        num /= 10
         acc++
-    } while (N > 0)
+    } while (num > 0)
     return acc
 }
 
@@ -88,12 +90,11 @@ fun fib(n: Int): Int {
     var f1 = 0
     var f2 = 1
     var acc: Int
-    var N = n
-    while (N > 0) {
+    var num = n
+    for (i in n downTo 1) {
         acc = f2
         f2 += f1
         f1 = acc
-        N--;
     }
     return f1
 }
@@ -146,10 +147,7 @@ fun maxDivisor(n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    val value = when {
-        m < n -> m
-        else -> n
-    }
+    val value = minOf(m, n)
     for (i in 2..value) {
         if (m % i == 0 && n % i == 0)
             return false
@@ -167,10 +165,9 @@ fun isCoPrime(m: Int, n: Int): Boolean {
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     val min = Math.floor(Math.sqrt(m.toDouble())).toInt()
     val max = Math.ceil(Math.sqrt(m.toDouble())).toInt()
-    for (i in min..max) {
-        if (i * i in m..n)
-            return true
-    }
+    val f = { v: Int -> v * v in m..n }
+    if (f(min) || f(max))
+        return true
     return false
 }
 
@@ -191,9 +188,11 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * этого для какого-либо начального X > 0.
  */
 fun collatzSteps(x: Int): Int {
-    return if (x == 1) 0
-    else if (x % 2 == 0) 1 + collatzSteps(x / 2)
-    else 1 + collatzSteps(3 * x + 1)
+    return when {
+        x == 1 -> 0
+        x % 2 == 0 -> 1 + collatzSteps(x / 2)
+        else -> 1 + collatzSteps(3 * x + 1)
+    }
 }
 
 /**
@@ -206,31 +205,25 @@ fun collatzSteps(x: Int): Int {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    var myX = x
-    while (myX > 2 * Math.PI) {
-        myX -= 2 * Math.PI
-    }
-    while (myX < 2 * Math.PI) {
-        myX += 2 * Math.PI
-    }
+    var myX = x % (2 * Math.PI)
     var acc = 0.0
     var an = 0.0
     var step = 0.0;
-    val fac = fun(value: Double): Double {
-        var v = value
-        var acc = 1.0;
-        while (v > 0) {
-            acc *= v
-            v -= 1
-        }
-        return acc
-    }
+    var k = 1
+    var f = 1.0 //факториал в знаменателе
+    var myY = 1.0
     do {
-        var ex = (2 * step + 1)
-        an = (-1.0).pow(step) * (myX.pow(ex) / fac(ex))
+        if (step > 0) {
+            myY *= myX
+            myY *= myX
+        }
+        an = k * myY * myX / f
         acc += an
-        //println("x=$x \t myX = $myX \t step = $step \t ex = $ex \t An = $An \t acc = $acc \t fac = ${fac(ex)}")
         step += 1
+        k *= -1
+        f *= 2 * step
+        f *= 2 * step + 1
+
     } while (Math.abs(an) > eps)
     return acc
 }
@@ -245,30 +238,24 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    var myX = x
-    while (myX > 2 * Math.PI) {
-        myX -= 2 * Math.PI
-    }
-    while (myX < 2 * Math.PI) {
-        myX += 2 * Math.PI
-    }
+    var myX = x % (2 * Math.PI)
     var acc = 0.0
     var an = 0.0
     var step = 0.0;
-    val fac = fun(value: Double): Double {
-        var v = value
-        var acc = 1.0;
-        while (v > 0) {
-            acc *= v
-            v -= 1
-        }
-        return acc
-    }
+    var f = 1.0
+    var k = 1
+    var myY = 1.0
     do {
-        var ex = (2 * step)
-        an = (-1.0).pow(step) * (myX.pow(ex) / fac(ex))
+        if (step > 0) {
+            myY *= myX
+            myY *= myX
+        }
+        an = k * myY / f
         acc += an
         step += 1
+        f *= 2 * step - 1
+        f *= 2 * step
+        k *= -1
     } while (Math.abs(an) > eps)
     return acc
 }
@@ -289,11 +276,12 @@ fun revert(n: Int): Int {
         step++
     } while (input > 0)
     input = n
+    var s = 10.0.pow(step - 1).toInt() // степень
     do {
-        out += ((input % 10).toFloat() * 10.0.pow(step - 1)).toInt()
+        out += (input % 10) * s
         input /= 10
-        step--
-    } while (step > 0)
+        s /= 10
+    } while (s > 0)
     return out
 }
 

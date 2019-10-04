@@ -91,20 +91,20 @@ fun timeForHalfWay(
     val s1 = t1 * v1
     val s2 = t2 * v2
     val s = (s1 + s2 + t3 * v3) / 2
-    var T = 0.0
+    var t = 0.0
     if (s / v1 <= t1) {
         return s / v1
     } else {
-        T = t1
+        t = t1
     }
     if ((s - s1) / v2 <= t2) {
-        T += (s - s1) / v2
-        return T
+        t += (s - s1) / v2
+        return t
     } else {
-        T += t2
+        t += t2
     }
-    T += ((s - s1 - s2) / v3)
-    return T
+    t += ((s - s1 - s2) / v3)
+    return t
 }
 
 /**
@@ -166,9 +166,9 @@ fun rookOrBishopThreatens(
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    var myA = maxOf(a, b, c)
-    var myC = minOf(a, b, c)
-    var myB = a + b + c - (myA + myC)
+    val myA = maxOf(a, b, c)
+    val myC = minOf(a, b, c)
+    val myB = a + b + c - (myA + myC)
     return when {
         myA > myB + myC -> -1
         myA * myA == myB * myB + myC * myC -> 1
@@ -187,18 +187,18 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  *
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-
+    var size = -1
     if (b < c || d < a)
         return -1
     if (c >= a) {
-        if (b in c..(d - 1))
-            return b - c
+        if (b in c until (d - 1))
+            size = b - c
         else
-            return d - c
+            size = d - c
     } else if (c < a)
-        if (d in a..(b - 1))
-            return d - a
+        if (d in a until (b - 1))
+            size = d - a
         else
-            return b - a
-    return -1
+            size = b - a
+    return size
 }

@@ -153,7 +153,7 @@ fun center(list: MutableList<Double>): MutableList<Double> {
     for (i in list)
         m += i
     m /= list.size
-    list.forEachIndexed { index, d -> list[index] -= m }
+    list.forEachIndexed { index, _ -> list[index] -= m }
 
     return list
 }
@@ -167,7 +167,7 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  */
 fun times(a: List<Int>, b: List<Int>): Int {
     var m = 0
-    a.forEachIndexed({ i, d -> m += a[i] * b[i] })
+    a.forEachIndexed { i, _ -> m += a[i] * b[i] }
     return m
 }
 
