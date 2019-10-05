@@ -119,7 +119,8 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    for (divider in 2..n / 2) {
+
+    for (divider in 2..(n / 2 - n / 5)) {
         if (n % divider == 0)
             return divider
     }
@@ -132,7 +133,7 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (divider in n / 2 downTo 1) {
+    for (divider in (n / 2) downTo 1) {
         if (n % divider == 0)
             return divider
     }
@@ -324,19 +325,26 @@ fun hasDifferentDigits(n: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int {
+fun findCharInFx(n: Int, f: (Int) -> Int):Int {
     var out = 0
-    for (i in 1..Int.MAX_VALUE) {
-        var num = if (i * i % 10 == 0) revert(i * i + 1) else revert(i * i)
+    val myList = mutableListOf<Int>() // разбиваем число на цифры
+    for (i in 1..Int.MAX_VALUE) { //конечно, для y = x^2 хватит и 24, но если функция другая, то может потребоваться большее число расчетов
+        var num = f(i)
+        myList.clear()
         while (num > 0) {
             out++
-            if (out == n)
-                return (num % 10)
+            myList.add(num % 10)
             num /= 10
+        }
+        if (out >= n) {
+            return myList[out - n]
         }
     }
     return -1
 }
+
+fun squareSequenceDigit(n: Int): Int = findCharInFx(n) { it * it }
+
 
 /**
  * Сложная
@@ -347,16 +355,4 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int {
-    var out = 0
-    for (i in 1..Int.MAX_VALUE) {
-        var num = if (fib(i) % 10 == 0) revert(fib(i) + 1) else revert(fib(i))
-        while (num > 0) {
-            out++
-            if (out == n)
-                return (num % 10)
-            num /= 10
-        }
-    }
-    return -1
-}
+fun fibSequenceDigit(n: Int): Int = findCharInFx(n) { fib(it) }
