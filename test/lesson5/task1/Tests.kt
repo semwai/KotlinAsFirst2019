@@ -102,14 +102,15 @@ class Tests {
     @Test
     @Tag("Easy")
     fun buildGrades() {
-        assertEquals(
-            mapOf<Int, List<String>>(),
-            buildGrades(mapOf())
-        )
+
         assertEquals(
             mapOf(5 to listOf("Михаил", "Семён"), 3 to listOf("Марат")),
             buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
                 .mapValues { (_, v) -> v.sorted() }
+        )
+        assertEquals(
+            mapOf<Int, List<String>>(),
+            buildGrades(mapOf())
         )
         assertEquals(
             mapOf(3 to listOf("Марат", "Михаил", "Семён")),
@@ -135,8 +136,9 @@ class Tests {
 
         subtractOf(from, mapOf("b" to "z"))
         assertEquals(from, mapOf("a" to "z", "b" to "c"))
-
+        println(from.toString())
         subtractOf(from, mapOf("a" to "z"))
+        println(from.toString())
         assertEquals(from, mapOf("b" to "c"))
     }
 
