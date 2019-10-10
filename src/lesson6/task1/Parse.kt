@@ -2,6 +2,10 @@
 
 package lesson6.task1
 
+import java.lang.Exception
+import java.lang.IllegalArgumentException
+import java.util.*
+
 /**
  * Пример
  *
@@ -208,4 +212,65 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    val myCommands = commands.replace(" ", ""); //удаляем пробелы
+    println(myCommands)
+
+    //проверка на ошибочный ввод команд
+    if (myCommands.map { listOf('>', '<', '+', '-', '[', ']').contains(it) }.contains(false))
+        throw IllegalArgumentException()
+    if (myCommands.count { it == '[' } - myCommands.count { it == ']' } != 0)
+        throw IllegalArgumentException()
+    val data = IntArray(cells) { 0 }
+    var myLimit = limit
+    var i = cells / 2 // позиция датчика
+    var ip = 0 // номер текущей выполняемой команды
+    var funStack = ArrayDeque<Int>()  // стек позиций возврата из цикла
+    //проходим по командам и анализируем в каких местах идет переход на начало цикла
+    // myCommands.forEachIndexed { index, c -> if (c == '[') funStack.add(index) }
+    fun searchPair(index: Int): Int { // поиск ] для [ с учеом вложенности
+        var c = 1;
+        val offset = myCommands.length - myCommands.substring(index).length
+        myCommands.substring(index).forEachIndexed { i, it ->
+            print(it)
+            if (it == '[') c++
+            if (it == ']') {
+                c--
+                if (c == 0)
+                    return i + offset
+            }
+        }
+        return 0;
+    }
+    println(searchPair(19))
+    //начинаем выполнение инструкций
+    var iter = 0
+    while (iter < myCommands.length) {
+        if (myLimit == 0)
+            break
+        when (myCommands[iter]) {
+            '>' -> if (i >= cells - 1) throw IllegalStateException() else i++
+            '<' -> if (i <= 0) throw IllegalStateException() else i--
+            '+' -> data[i]++
+            '-' -> data[i]--
+            ']' ->
+                if (data[i] != 0)
+                    iter = funStack.peekLast()
+                else
+                    funStack.removeLast()
+            '[' ->
+                if (data[i] == 0)
+                    iter = searchPair(iter)
+                else
+                    funStack.addLast(iter)
+
+
+        }
+        println("lim = $myLimit iter = $iter,\ti = $i,\tcommand = ${myCommands[iter]},data = ${data.toList().toString()} stack = ${funStack.toList().toString()}")
+        iter++
+        myLimit--
+    }
+    println(data.toList().toString())
+
+    return data.toList()
+}
