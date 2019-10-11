@@ -167,9 +167,8 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
     val min = Math.floor(Math.sqrt(m.toDouble())).toInt()
     val max = Math.ceil(Math.sqrt(m.toDouble())).toInt()
     val f = { v: Int -> v * v in m..n }
-    if (f(min) || f(max))
-        return true
-    return false
+    return f(min) || f(max)
+
 }
 
 /**
@@ -206,7 +205,7 @@ fun collatzSteps(x: Int): Int {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    var myX = x % (2 * Math.PI)
+    val myX = x % (2 * Math.PI)
     var acc = 0.0
     var an = 0.0
     var step = 0.0;
@@ -257,7 +256,7 @@ fun cos(x: Double, eps: Double): Double {
         f *= 2 * step - 1
         f *= 2 * step
         k *= -1
-    } while (Math.abs(an) > eps)
+    } while (abs(an) > eps)
     return acc
 }
 
@@ -271,12 +270,7 @@ fun cos(x: Double, eps: Double): Double {
 fun revert(n: Int): Int {
     var input = n
     var out = 0
-    var step = 0
-    do {
-        input /= 10
-        step++
-    } while (input > 0)
-    input = n
+    val step = digitNumber(n)
     var s = 10.0.pow(step - 1).toInt() // степень
     do {
         out += (input % 10) * s
@@ -325,22 +319,21 @@ fun hasDifferentDigits(n: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun findCharInFx(n: Int, f: (Int) -> Int):Int {
+fun findCharInFx(n: Int, f: (Int) -> Int): Int {
     var out = 0
-    val myList = mutableListOf<Int>() // разбиваем число на цифры
-    for (i in 1..Int.MAX_VALUE) { //конечно, для y = x^2 хватит и 24, но если функция другая, то может потребоваться большее число расчетов
-        var num = f(i)
-        myList.clear()
+    var i = 0
+    var num: Int
+    var revertnum: Int
+    while (true) {
+        num = f(i++)
+        revertnum = revert(num)
         while (num > 0) {
             out++
-            myList.add(num % 10)
+            if (out == n) return revertnum % 10
             num /= 10
-        }
-        if (out >= n) {
-            return myList[out - n]
+            revertnum /= 10
         }
     }
-    return -1
 }
 
 fun squareSequenceDigit(n: Int): Int = findCharInFx(n) { it * it }
