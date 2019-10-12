@@ -178,7 +178,7 @@ fun polynom(p: List<Int>, x: Int): Int {
     var m = 0
     var myX = 1;
     p.forEach { it ->
-        m += p[it] * myX;
+        m += it * myX;
         myX *= x
     }
     return m

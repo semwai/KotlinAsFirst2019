@@ -244,6 +244,7 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    var myLimit = limit - commands.count { it == ' ' }
     val myCommands = commands.replace(" ", ""); //удаляем пробелы
     //проверка на ошибочный ввод команд
     if (myCommands.map { listOf('>', '<', '+', '-', '[', ']').contains(it) }.contains(false))
@@ -254,7 +255,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     if (myCommands.count { it == '[' } - myCommands.count { it == ']' } != 0)
         throw IllegalArgumentException()
     val data = IntArray(cells) { 0 }
-    var myLimit = limit
+
     var i = cells / 2 // позиция датчика
     var ip = 0 // номер текущей выполняемой команды
     var funStack = Stack<Pair<Int, Int>>()  // стек позиций возврата из цикла
@@ -301,6 +302,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         //println("lim = $myLimit iter = $iter,\ti = $i,\tcommand = ${myCommands[iter]},box=${data[i]}  ,data = ${data.toList().toString()} stack = ${funStack.toList().toString()}")
         iter++
         myLimit--
+
     }
     return data.toList()
 }
