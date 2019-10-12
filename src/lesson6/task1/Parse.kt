@@ -248,6 +248,9 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     //проверка на ошибочный ввод команд
     if (myCommands.map { listOf('>', '<', '+', '-', '[', ']').contains(it) }.contains(false))
         throw IllegalArgumentException()
+    //если ] в коде раньше, чем [
+    if (myCommands.indexOf(']') < myCommands.indexOf('['))
+        throw IllegalArgumentException()
     if (myCommands.count { it == '[' } - myCommands.count { it == ']' } != 0)
         throw IllegalArgumentException()
     val data = IntArray(cells) { 0 }
