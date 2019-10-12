@@ -260,7 +260,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var ip = 0 // номер текущей выполняемой команды
     var funStack = Stack<Pair<Int, Int>>()  // стек позиций возврата из цикла
     //проходим по командам и анализируем в каких местах идет переход на начало цикла
-    // myCommands.forEachIndexed { index, c -> if (c == '[') funStack.add(index) }
+    //myCommands.forEachIndexed { index, c -> if (c == '[') funStack.add(index) }
     fun searchPair(index: Int): Int { // поиск ] для [ с учеом вложенности
         var c = 1;
         val offset = myCommands.length - myCommands.substring(index + 1).length
@@ -299,7 +299,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     myLimit -= (b - a - 1)
                 }
         }
-        //println("lim = $myLimit iter = $iter,\ti = $i,\tcommand = ${myCommands[iter]},box=${data[i]}  ,data = ${data.toList().toString()} stack = ${funStack.toList().toString()}")
+        println("lim = $myLimit iter = $iter,\ti = $i,\tcommand = ${myCommands[iter]},box=${data[i]}  ,data = ${data.toList().toString()} stack = ${funStack.toList().toString()}")
         iter++
         myLimit--
 

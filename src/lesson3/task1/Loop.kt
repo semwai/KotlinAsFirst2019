@@ -249,12 +249,14 @@ fun cos(x: Double, eps: Double): Double {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun revert(n: Int): Int {
+    //если взять, к примеру, 1148328769, то правильного ответа не получится из-за того, что перевернутое число > intMax. Поэтому буду обрубать верхушку
     var input = n
     var out = 0
     val step = digitNumber(n)
     var s = 10.0.pow(step - 1).toInt() // степень
     do {
-        out += (input % 10) * s
+        val sl = (input % 10) * s.toLong()
+        out += if (sl < Int.MAX_VALUE.toLong()) (input % 10) * s else 0 //собсвенно говоря тут и происходит печальная обрубка. Иначе только менять тесты и использовать long
         input /= 10
         s /= 10
     } while (s > 0)
@@ -310,7 +312,10 @@ fun findCharInFx(n: Int, f: (Int) -> Int): Int {
         revertnum = revert(num)
         while (num > 0) {
             out++
-            if (out == n) return revertnum % 10 // пока хотел объяснить почему мне нужны списки я понял, что мне они не нужны. Оказывается думать перед сабмитом полезно
+            if (out == n) {
+                return revertnum % 10 // пока хотел объяснить почему мне нужны списки я понял, что мне они не нужны. Оказывается думать перед сабмитом полезно
+            }
+
             num /= 10
             revertnum /= 10
         }
