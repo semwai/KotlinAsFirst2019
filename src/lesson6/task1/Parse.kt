@@ -2,6 +2,7 @@
 
 package lesson6.task1
 
+import lesson3.task1.findCharInFx
 import java.lang.Exception
 import java.lang.IllegalArgumentException
 import java.time.LocalDate
@@ -92,7 +93,7 @@ fun dateStrToDigit(str: String): String {
         "ноября",
         "декабря"
     )
-    var date:String
+    var date: String
     try {
         val (day, month, year) = str.split(" ")
         date = String.format("%02d.%02d.%s", day.toInt(), m.indexOf(month) + 1, year)
@@ -243,10 +244,7 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    return TODO()
     val myCommands = commands.replace(" ", ""); //удаляем пробелы
-    println(myCommands)
-
     //проверка на ошибочный ввод команд
     if (myCommands.map { listOf('>', '<', '+', '-', '[', ']').contains(it) }.contains(false))
         throw IllegalArgumentException()
@@ -256,14 +254,13 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var myLimit = limit
     var i = cells / 2 // позиция датчика
     var ip = 0 // номер текущей выполняемой команды
-    var funStack = ArrayDeque<Int>()  // стек позиций возврата из цикла
+    var funStack = Stack<Pair<Int, Int>>()  // стек позиций возврата из цикла
     //проходим по командам и анализируем в каких местах идет переход на начало цикла
     // myCommands.forEachIndexed { index, c -> if (c == '[') funStack.add(index) }
     fun searchPair(index: Int): Int { // поиск ] для [ с учеом вложенности
         var c = 1;
-        val offset = myCommands.length - myCommands.substring(index).length
-        myCommands.substring(index).forEachIndexed { i, it ->
-            print(it)
+        val offset = myCommands.length - myCommands.substring(index + 1).length
+        myCommands.substring(index + 1).forEachIndexed { i, it ->
             if (it == '[') c++
             if (it == ']') {
                 c--
@@ -273,7 +270,6 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         }
         return 0;
     }
-    println(searchPair(19))
     //начинаем выполнение инструкций
     var iter = 0
     while (iter < myCommands.length) {
@@ -284,24 +280,24 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             '<' -> if (i <= 0) throw IllegalStateException() else i--
             '+' -> data[i]++
             '-' -> data[i]--
+            '[' ->
+                if (data[i] != 0)
+                    funStack.push(Pair(iter, searchPair(iter)))
+                else {
+                    myLimit -= (searchPair(iter) - iter - 1)
+                    iter = searchPair(iter)
+                }
             ']' ->
                 if (data[i] != 0)
-                    iter = funStack.peekLast()
-                else
-                    funStack.removeLast()
-            '[' ->
-                if (data[i] == 0)
-                    iter = searchPair(iter)
-                else
-                    funStack.addLast(iter)
-
-
+                    iter = funStack.peek().first
+                else {
+                    val (a, b) = funStack.pop()
+                    myLimit -= (b - a - 1)
+                }
         }
-        println("lim = $myLimit iter = $iter,\ti = $i,\tcommand = ${myCommands[iter]},data = ${data.toList().toString()} stack = ${funStack.toList().toString()}")
+        //println("lim = $myLimit iter = $iter,\ti = $i,\tcommand = ${myCommands[iter]},box=${data[i]}  ,data = ${data.toList().toString()} stack = ${funStack.toList().toString()}")
         iter++
         myLimit--
     }
-    println(data.toList().toString())
-
     return data.toList()
 }
