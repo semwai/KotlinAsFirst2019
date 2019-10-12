@@ -2,6 +2,7 @@
 
 package lesson3.task1
 
+import lesson1.task1.sqr
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -119,8 +120,8 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-
-    for (divider in 2..(n / 2 - n / 5)) {
+    val dmax = sqrt(n.toDouble() + 1).toInt()
+    for (divider in 2..dmax) {
         if (n % divider == 0)
             return divider
     }
@@ -133,7 +134,8 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (divider in (n / 2) downTo 2) {
+    val dmax = sqrt(n.toDouble() + 1).toInt()
+    for (divider in n / 2 downTo 2) {
         if (n % divider == 0)
             return divider
     }
@@ -207,23 +209,12 @@ fun collatzSteps(x: Int): Int {
 fun sin(x: Double, eps: Double): Double {
     val myX = x % (2 * Math.PI)
     var acc = 0.0
-    var an = 0.0
-    var step = 0.0;
-    var k = 1
-    var f = 1.0 //факториал в знаменателе
-    var myY = 1.0
+    var an = myX
+    var step = 1;
     do {
-        if (step > 0) {
-            myY *= myX
-            myY *= myX
-        }
-        an = k * myY * myX / f
         acc += an
-        step += 1
-        k *= -1
-        f *= 2 * step
-        f *= 2 * step + 1
-
+        an *= -1 * myX * myX / ((2 * step) * (2 * step + 1))
+        step++
     } while (Math.abs(an) > eps)
     return acc
 }
@@ -238,25 +229,15 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    var myX = x % (2 * Math.PI)
+    val myX = x % (2 * Math.PI)
     var acc = 0.0
-    var an = 0.0
-    var step = 0.0;
-    var f = 1.0
-    var k = 1
-    var myY = 1.0
+    var an = 1.0
+    var step = 1;
     do {
-        if (step > 0) {
-            myY *= myX
-            myY *= myX
-        }
-        an = k * myY / f
         acc += an
-        step += 1
-        f *= 2 * step - 1
-        f *= 2 * step
-        k *= -1
-    } while (abs(an) > eps)
+        an *= -1 * myX * myX / ((2 * step) * (2 * step - 1))
+        step++
+    } while (Math.abs(an) > eps)
     return acc
 }
 
@@ -329,7 +310,7 @@ fun findCharInFx(n: Int, f: (Int) -> Int): Int {
         revertnum = revert(num)
         while (num > 0) {
             out++
-            if (out == n) return revertnum % 10
+            if (out == n) return revertnum % 10 // пока хотел объяснить почему мне нужны списки я понял, что мне они не нужны. Оказывается думать перед сабмитом полезно
             num /= 10
             revertnum /= 10
         }

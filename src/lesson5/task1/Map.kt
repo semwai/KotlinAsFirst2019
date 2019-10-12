@@ -137,7 +137,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
  * В выходном списке не должно быть повторяюихся элементов,
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = (a.toSet().intersect(b.toSet())).toList()
 
 /**
  * Средняя
@@ -156,7 +156,14 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
  *     mapOf("Emergency" to "911", "Police" to "02")
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
-fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> = TODO()
+fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
+    val out = (mapB + mapA).toMutableMap();
+    out.forEach {
+        if (mapB.containsKey(it.key) && out[it.key] != mapB[it.key])
+            out[it.key] = "${out[it.key]}, ${mapB[it.key]}"
+    }
+    return out
+}
 
 /**
  * Средняя
@@ -168,7 +175,13 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> = TODO()
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> =
+    (stockPrices.distinctBy { it.first }
+        .map {
+            it.first to
+                    ((stockPrices.filter { (first) -> first == it.first }.sumByDouble { p -> p.second })
+                            / stockPrices.count { (first) -> first == it.first })
+        }).toMap()
 
 /**
  * Средняя
@@ -185,7 +198,16 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
+    val n = stuff.filter { it.value.first == kind }
+    return if (n.count() == 0) null else
+        n.map {
+            Pair(
+                it.key,
+                it.value.second
+            )
+        }.toList().toSortedSet(compareBy { it.second }).first().first
+}
 
 /**
  * Средняя
@@ -196,7 +218,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean = !word.map { chars.contains(it) }.contains(false)
 
 /**
  * Средняя
@@ -210,7 +232,9 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> =
+    list.filter { e -> list.count { it == e } > 1 }.distinct().map { e -> e to list.count { it == e } }.toMap()
+
 
 /**
  * Средняя
@@ -296,7 +320,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     var ost = treasures.filter { it.value.first < currentCap }
     //преобразуем в удобный вид
 
-    ost.map { data.add(Triple(it.key,it.value.first,it.value.second))}
+    ost.map { data.add(Triple(it.key, it.value.first, it.value.second)) }
     data.sortBy { it.third > 1 }
     println(data.toString())
     return TODO()

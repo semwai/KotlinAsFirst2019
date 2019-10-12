@@ -4,6 +4,9 @@ package lesson6.task1
 
 import java.lang.Exception
 import java.lang.IllegalArgumentException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.*
 
 /**
@@ -73,7 +76,34 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    return TODO()
+    val m = listOf(
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+    var date:String
+    try {
+        val (day, month, year) = str.split(" ")
+        date = String.format("%02d.%02d.%s", day.toInt(), m.indexOf(month) + 1, year)
+        LocalDate.parse(date, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+    } catch (e: Exception) {
+        println(e.message)
+        return ""
+    }
+    return date
+
+}
 
 /**
  * Средняя
@@ -213,6 +243,7 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    return TODO()
     val myCommands = commands.replace(" ", ""); //удаляем пробелы
     println(myCommands)
 

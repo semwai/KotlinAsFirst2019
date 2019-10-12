@@ -146,15 +146,10 @@ fun mean(list: List<Double>): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-
     if (list.isEmpty())
         return list
-    var m = 0.0
-    for (i in list)
-        m += i
-    m /= list.size
+    var m = mean(list)
     list.forEachIndexed { index, _ -> list[index] -= m }
-
     return list
 }
 
@@ -182,8 +177,8 @@ fun times(a: List<Int>, b: List<Int>): Int {
 fun polynom(p: List<Int>, x: Int): Int {
     var m = 0
     var myX = 1;
-    p.forEachIndexed { i, d ->
-        m += p[i] * myX;
+    p.forEach { it ->
+        m += p[it] * myX;
         myX *= x
     }
     return m
@@ -226,7 +221,6 @@ fun factorize(n: Int): List<Int> {
                 break
             }
         }
-
     }
     return outlist
 }
@@ -252,7 +246,6 @@ fun convert(n: Int, base: Int): List<Int> {
         return listOf(0)
     var myList = mutableListOf<Int>()
     var num = n
-
     while (num > 0) {
         myList.add(num % base)
         num /= base
@@ -326,7 +319,17 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-   return TODO()
+    var num = n
+    var outstr = buildString { }
+    val letters = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M").reversed()
+    val values = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000).reversed()
+    values.forEachIndexed { index, i ->
+        if (num >= i) {
+            outstr += letters[index].repeat(num / i)
+            num -= (num / i) * i
+        }
+    }
+    return outstr
 }
 
 /**
