@@ -1,4 +1,4 @@
-@file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
+@file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence", "IMPLICIT_CAST_TO_ANY")
 
 package lesson4.task1
 
@@ -129,12 +129,10 @@ fun abs(v: List<Double>): Double {
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
 fun mean(list: List<Double>): Double {
-    if (list.isEmpty())
-        return 0.0
     var m = 0.0
     for (i in list)
         m += i
-    return m / list.size
+    return if (list.isEmpty()) 0.0 else m / list.size
 }
 
 /**
@@ -146,9 +144,7 @@ fun mean(list: List<Double>): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    if (list.isEmpty())
-        return list
-    var m = mean(list)
+    val m = mean(list)
     list.forEachIndexed { index, _ -> list[index] -= m }
     return list
 }
@@ -160,11 +156,8 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
-fun times(a: List<Int>, b: List<Int>): Int {
-    var m = 0
-    a.forEachIndexed { i, _ -> m += a[i] * b[i] }
-    return m
-}
+fun times(a: List<Int>, b: List<Int>): Int = a.mapIndexed { index, i -> i * b[index] }.sumBy { it }
+
 
 /**
  * Средняя
@@ -177,7 +170,7 @@ fun times(a: List<Int>, b: List<Int>): Int {
 fun polynom(p: List<Int>, x: Int): Int {
     var m = 0
     var myX = 1;
-    p.forEach { it ->
+    p.forEach {
         m += it * myX;
         myX *= x
     }
@@ -211,14 +204,13 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
  * Множители в списке должны располагаться по возрастанию.
  */
 fun factorize(n: Int): List<Int> {
-    var outlist = mutableListOf<Int>()
+    val outlist = mutableListOf<Int>()
     var number = n
     while (number > 1) {
         for (i in 2..(number)) {
-            if (number % i == 0) {
+            while (number % i == 0) {
                 number /= i;
                 outlist.add(i)
-                break
             }
         }
     }
@@ -244,7 +236,7 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
 fun convert(n: Int, base: Int): List<Int> {
     if (n == 0)
         return listOf(0)
-    var myList = mutableListOf<Int>()
+    val myList = mutableListOf<Int>()
     var num = n
     while (num > 0) {
         myList.add(num % base)
@@ -264,12 +256,9 @@ fun convert(n: Int, base: Int): List<Int> {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, n.toString(base) и подобные), запрещается.
  */
-fun convertToString(n: Int, base: Int): String {
-    if (n == 0) return "0"
-    var out = buildString { }
-    convert(n, base).forEach { out += if (it < 10) it else (it + 87).toChar() }
-    return out
-}
+fun convertToString(n: Int, base: Int) = if (n == 0) "0" else
+    convert(n, base).map { if (it < 10) it else (it + 87).toChar() }.joinToString(separator = "")
+
 
 /**
  * Средняя
@@ -299,7 +288,7 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    var myStr = str.reversed()
+    val myStr = str.reversed()
     var b = 1
     var out = 0
     myStr.forEach {

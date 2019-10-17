@@ -247,22 +247,19 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var myLimit = limit - commands.count { it == ' ' }
     val myCommands = commands.replace(" ", ""); //удаляем пробелы
     //проверка на ошибочный ввод команд
-    if (myCommands.map { listOf('>', '<', '+', '-', '[', ']').contains(it) }.contains(false))
-        throw IllegalArgumentException()
+    require(!myCommands.map { listOf('>', '<', '+', '-', '[', ']').contains(it) }.contains(false))
     //если ] в коде раньше, чем [
-    if (myCommands.indexOf(']') < myCommands.indexOf('['))
-        throw IllegalArgumentException()
-    if (myCommands.count { it == '[' } - myCommands.count { it == ']' } != 0)
-        throw IllegalArgumentException()
+    require(myCommands.indexOf(']') >= myCommands.indexOf('['))
+    require(myCommands.count { it == '[' } - myCommands.count { it == ']' } == 0)
     val data = IntArray(cells) { 0 }
 
     var i = cells / 2 // позиция датчика
     var ip = 0 // номер текущей выполняемой команды
-    var funStack = Stack<Pair<Int, Int>>()  // стек позиций возврата из цикла
+    val funStack = Stack<Pair<Int, Int>>()  // стек позиций возврата из цикла
     //проходим по командам и анализируем в каких местах идет переход на начало цикла
     //myCommands.forEachIndexed { index, c -> if (c == '[') funStack.add(index) }
-    fun searchPair(index: Int): Int { // поиск ] для [ с учеом вложенности
-        var c = 1;
+    fun searchPair(index: Int): Int { // поиск ] для [ с учетом вложенности
+        var c = 1
         val offset = myCommands.length - myCommands.substring(index + 1).length
         myCommands.substring(index + 1).forEachIndexed { i, it ->
             if (it == '[') c++
@@ -272,7 +269,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     return i + offset
             }
         }
-        return 0;
+        return 0
     }
     //начинаем выполнение инструкций
     var iter = 0
@@ -299,10 +296,9 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     myLimit -= (b - a - 1)
                 }
         }
-        println("lim = $myLimit iter = $iter,\ti = $i,\tcommand = ${myCommands[iter]},box=${data[i]}  ,data = ${data.toList().toString()} stack = ${funStack.toList().toString()}")
+        //println("lim = $myLimit iter = $iter,\ti = $i,\tcommand = ${myCommands[iter]},box=${data[i]}  ,data = ${data.toList().toString()} stack = ${funStack.toList().toString()}")
         iter++
         myLimit--
-
     }
     return data.toList()
 }

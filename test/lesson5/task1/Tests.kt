@@ -139,7 +139,7 @@ class Tests {
         println(from.toString())
         subtractOf(from, mapOf("a" to "z"))
         println(from.toString())
-        assertEquals(from, mapOf("b" to "c"))
+        assertEquals(mapOf("b" to "c"), from) //
     }
 
     @Test

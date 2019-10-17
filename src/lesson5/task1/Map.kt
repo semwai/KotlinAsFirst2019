@@ -125,9 +125,15 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  *   subtractOf(a = mutableMapOf("a" to "z"), mapOf("a" to "z"))
  *     -> a changes to mutableMapOf() aka becomes empty
  */
-fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
-    a.filter { p -> !b.map { it.key == p.key && it.value == p.value }.contains(true) }
+fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
+    //a.filter { p -> !b.map { it.key == p.key && it.value == p.value }.contains(true) } жаль, что данная функция возвращает новый мэп, а не меняет старый
 
+    val item = a.iterator()
+    while (item.hasNext()) {
+        val v = item.next()
+        if (v.value == b[v.key])
+            item.remove()
+    }
 }
 
 /**
@@ -246,7 +252,9 @@ fun extractRepeats(list: List<String>): Map<String, Int> =
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean = TODO()
+fun hasAnagrams(words: List<String>): Boolean = words.any {
+    words.map { it.toList().sorted() }.count { b -> b == it.toList().sorted() } > 1
+}
 
 /**
  * Сложная
@@ -272,7 +280,38 @@ fun hasAnagrams(words: List<String>): Boolean = TODO()
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+
+
+fun propagateHandshakes(fr: Map<String, Set<String>>): Map<String, Set<String>> {
+    val friends = fr.toMutableMap()
+    var addtofr = mutableListOf<String>()
+    friends.forEach {
+        it.value.forEach { it2 ->
+            if (!friends.containsKey(it2))
+                addtofr.add(it2)
+        }
+    }
+    addtofr.forEach {
+        friends[it] = mutableSetOf()
+    }
+    println(friends.toString())
+    fun find(input: String, names: Set<String>, frlist: MutableSet<String>) {
+        names.forEach {
+            if (it != input)
+                frlist.add(it)
+            friends[it]?.forEach { str ->
+                if (!frlist.contains(str)) {
+                    find(input, mutableSetOf(str), frlist)
+                }
+            }
+        }
+    }
+    return friends.map {
+        val f = mutableSetOf<String>()
+        find(it.key, it.value, f)
+        it.key to f.toSortedSet()
+    }.toMap()
+}
 
 /**
  * Сложная

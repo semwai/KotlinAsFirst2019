@@ -215,7 +215,7 @@ fun sin(x: Double, eps: Double): Double {
         acc += an
         an *= -1 * myX * myX / ((2 * step) * (2 * step + 1))
         step++
-    } while (Math.abs(an) > eps)
+    } while (abs(an) > eps)
     return acc
 }
 
@@ -237,7 +237,7 @@ fun cos(x: Double, eps: Double): Double {
         acc += an
         an *= -1 * myX * myX / ((2 * step) * (2 * step - 1))
         step++
-    } while (Math.abs(an) > eps)
+    } while (abs(an) > eps)
     return acc
 }
 
@@ -255,8 +255,7 @@ fun revert(n: Int): Int {
     val step = digitNumber(n)
     var s = 10.0.pow(step - 1).toInt() // степень
     do {
-        val sl = (input % 10) * s.toLong()
-        out += if (sl < Int.MAX_VALUE.toLong()) (input % 10) * s else 0 //собсвенно говоря тут и происходит печальная обрубка. Иначе только менять тесты и использовать long
+        out += (input % 10) * s
         input /= 10
         s /= 10
     } while (s > 0)
@@ -306,18 +305,16 @@ fun findCharInFx(n: Int, f: (Int) -> Int): Int {
     var out = 0
     var i = 0
     var num: Int
-    var revertnum: Int
     while (true) {
         num = f(i++)
-        revertnum = revert(num)
+        val m = num
         while (num > 0) {
-            out++
-            if (out == n) {
-                return revertnum % 10 // пока хотел объяснить почему мне нужны списки я понял, что мне они не нужны. Оказывается думать перед сабмитом полезно
+            val dnum = digitNumber(num)
+            if (out + dnum >= n) {
+                return (m / 10.0.pow(out + dnum - n).toInt()) % 10
             }
-
             num /= 10
-            revertnum /= 10
+            out++
         }
     }
 }
