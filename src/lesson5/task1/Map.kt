@@ -284,7 +284,7 @@ fun hasAnagrams(words: List<String>): Boolean = words.any {
 
 fun propagateHandshakes(fr: Map<String, Set<String>>): Map<String, Set<String>> {
     val friends = fr.toMutableMap()
-    var addtofr = mutableListOf<String>()
+    val addtofr = mutableListOf<String>()
     friends.forEach {
         it.value.forEach { it2 ->
             if (!friends.containsKey(it2))
@@ -354,7 +354,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
  *   ) -> emptySet()
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    var currentCap = capacity // оставшийся вес в сумке
+    /*var currentCap = capacity // оставшийся вес в сумке
     var out = mutableSetOf<String>() // список предметов
     var data = mutableListOf<Triple<String, Int, Int>>()
     var ost = treasures.filter { it.value.first < currentCap }
@@ -362,7 +362,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
 
     ost.map { data.add(Triple(it.key, it.value.first, it.value.second)) }
     data.sortBy { it.third > 1 }
-    println(data.toString())
+    println(data.toString())*/
     return TODO()
     //var minCap = // самый легкий предмет в инвентаре
 }

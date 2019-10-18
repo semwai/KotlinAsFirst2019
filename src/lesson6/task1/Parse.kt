@@ -179,7 +179,9 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    str.split(" ").count {  str.split(" ").count{ r -> r == it} }
+}
 
 /**
  * Сложная
@@ -205,7 +207,44 @@ fun mostExpensive(description: String): String = TODO()
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+fun fromRoman(roman: String): Int {
+    val rome = mutableMapOf(
+        "CM" to 900,
+        "M" to 1000,
+        "CD" to 400,
+        "D" to 500,
+        "XC" to 90,
+        "C" to 100,
+        "XL" to 40,
+        "L" to 50,
+        "IX" to 9,
+        "X" to 10,
+        "IV" to 4,
+        "V" to 5,
+        "I" to 1
+    ).toList().toMutableList()
+    print(rome.toString())
+    var out = 0
+    roman.forEachIndexed { i, c ->
+        try {
+            if ("$c${roman[i + 1]}" == rome.filter { it.first == "$c${roman[i + 1]}" }.first().first && rome.first().first == "$c${roman[i + 1]}") {
+                out += rome.first().second
+                rome.removeAt(0)
+            } else {
+                rome.removeAt(0)
+            }
+        } catch (ex: Exception) {
+        }
+        if ("$c" == rome.filter { it.first == "$c" }.first().first && rome.first().first == "$c") {
+            out += rome.first().second
+            rome.removeAt(0)
+        } else {
+            rome.removeAt(0)
+        }
+
+    }
+    return out
+}
 
 /**
  * Очень сложная
@@ -244,15 +283,12 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    /*var myLimit = limit - commands.count { it == ' ' }
-    val myCommands = commands.replace(" ", ""); //удаляем пробелы*/
-    val myCommands = commands;
     var myLimit = limit
     //проверка на ошибочный ввод команд
-    require(!myCommands.map { listOf('>', '<', '+', '-', '[', ']', ' ').contains(it) }.contains(false))
+    require(!commands.map { listOf('>', '<', '+', '-', '[', ']', ' ').contains(it) }.contains(false))
     //если ] в коде раньше, чем [
-    require(myCommands.indexOf(']') >= myCommands.indexOf('['))
-    require(myCommands.count { it == '[' } - myCommands.count { it == ']' } == 0)
+    require(commands.indexOf(']') >= commands.indexOf('['))
+    require(commands.count { it == '[' } - commands.count { it == ']' } == 0)
     val data = IntArray(cells) { 0 }
 
     var i = cells / 2 // позиция датчика
@@ -262,8 +298,8 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     //myCommands.forEachIndexed { index, c -> if (c == '[') funStack.add(index) }
     fun searchPair(index: Int): Int { // поиск ] для [ с учетом вложенности
         var c = 1
-        val offset = myCommands.length - myCommands.substring(index + 1).length
-        myCommands.substring(index + 1).forEachIndexed { i, it ->
+        val offset = commands.length - commands.substring(index + 1).length
+        commands.substring(index + 1).forEachIndexed { i, it ->
             if (it == '[') c++
             if (it == ']') {
                 c--
@@ -274,33 +310,34 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         return 0
     }
     //начинаем выполнение инструкций
-    var iter = 0
-    while (iter < myCommands.length) {
+    while (ip < commands.length) {
+        myLimit--
         if (myLimit == 0)
             break
-        when (myCommands[iter]) {
+        when (commands[ip]) {
             '>' -> if (i >= cells - 1) throw IllegalStateException() else i++
             '<' -> if (i <= 0) throw IllegalStateException() else i--
             '+' -> data[i]++
             '-' -> data[i]--
+
             '[' ->
                 if (data[i] != 0)
-                    funStack.push(Pair(iter, searchPair(iter)))
+                    funStack.push(Pair(ip, searchPair(ip)))
                 else {
-                    myLimit -= (searchPair(iter) - iter - 1)
-                    iter = searchPair(iter)
+                    myLimit -= (searchPair(ip) - ip)
+                    ip = searchPair(ip)
                 }
             ']' ->
                 if (data[i] != 0)
-                    iter = funStack.peek().first
+                    ip = funStack.peek().first
                 else {
                     val (a, b) = funStack.pop()
                     myLimit -= (b - a - 1)
                 }
         }
-        //println("lim = $myLimit iter = $iter,\ti = $i,\tcommand = ${myCommands[iter]},box=${data[i]}  ,data = ${data.toList().toString()} stack = ${funStack.toList().toString()}")
-        iter++
-        myLimit--
+        println("lim = $myLimit ip = $ip,\ti = $i,\tcommand = ${commands[ip]},box=${data[i]}  ,data = ${data.toList().toString()} stack = ${funStack.toList().toString()}")
+        ip++
+
     }
     return data.toList()
 }
