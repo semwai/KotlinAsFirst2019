@@ -1,4 +1,4 @@
-@file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
+@file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence", "UNUSED_EXPRESSION")
 
 package lesson6.task1
 
@@ -244,10 +244,12 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    var myLimit = limit - commands.count { it == ' ' }
-    val myCommands = commands.replace(" ", ""); //удаляем пробелы
+    /*var myLimit = limit - commands.count { it == ' ' }
+    val myCommands = commands.replace(" ", ""); //удаляем пробелы*/
+    val myCommands = commands;
+    var myLimit = limit
     //проверка на ошибочный ввод команд
-    require(!myCommands.map { listOf('>', '<', '+', '-', '[', ']').contains(it) }.contains(false))
+    require(!myCommands.map { listOf('>', '<', '+', '-', '[', ']', ' ').contains(it) }.contains(false))
     //если ] в коде раньше, чем [
     require(myCommands.indexOf(']') >= myCommands.indexOf('['))
     require(myCommands.count { it == '[' } - myCommands.count { it == ']' } == 0)

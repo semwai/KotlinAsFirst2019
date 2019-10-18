@@ -154,10 +154,14 @@ class Tests {
             listOf(2916),
             computeDeviceCells(1, "+ ++++++++++++++++++++++++++-++-[+]", 5811)
         )
-        /*assertEquals(
+        assertEquals(
+            listOf(457),
+            computeDeviceCells(1, "+[++++++++++ +]", 500)
+        )
+        assertEquals(
             listOf(430),
             computeDeviceCells(1, "[+]+++++++++++++++++++++[++++++]", 500)
-        )*/
+        )
 
     }
 }
