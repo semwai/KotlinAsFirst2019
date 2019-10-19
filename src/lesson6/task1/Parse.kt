@@ -1,4 +1,4 @@
-@file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence", "UNUSED_EXPRESSION")
+@file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence", "UNUSED_EXPRESSION", "NAME_SHADOWING")
 
 package lesson6.task1
 
@@ -170,9 +170,28 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    //require(expression.count())
-    //println(expression.split(" ").toString())
-    return TODO()
+    val arr = expression.split(" ")
+    require(!arr.map {
+        if (it.length == 1) true else
+            !(it[0] == '+' || it[0] == '-')
+    }.contains(false))
+    var out = 0
+    var isNum = true
+    var sign = "+"
+    arr.forEach {
+
+        if (isNum) {
+            out += if (sign == "+") it.toInt() else -it.toInt()
+        } else {
+            when (it) {
+                "+" -> sign = it
+                "-" -> sign = it
+                else -> throw IllegalArgumentException()
+            }
+        }
+        isNum = !isNum
+    }
+    return out
 }
 
 /**
@@ -185,7 +204,12 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    return TODO()
+    var arr = str.split(" ").map { it.toLowerCase() }
+    val s = arr.filter { str -> arr.count { str == it } > 1 }
+
+    if (s.isEmpty()) return -1
+    return str.indexOf(s[0])
+
     //str.split(" ").count { str.split(" ").count { r -> r == it } }
 }
 
@@ -219,7 +243,7 @@ fun mostExpensive(description: String): String
     l.forEach {
         val p = it.trim().split(" ")
         if (p.size != 2) return ""
-        if (p[1].toFloat() <= 0) return ""
+        if (p[1].toFloat() < 0) return ""
         products.add(Pair(p[0], p[1].toFloat()))
     }
     return products.sortedWith(kotlin.Comparator { o1, o2 ->
@@ -239,6 +263,8 @@ fun mostExpensive(description: String): String
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int {
+    if (roman.isEmpty())
+        return -1
     //Рисмкое представление, обозначение в десятичной, используется ли только 1 раз (можно поставить XX, но нелья IXIX)
     val rome = mutableListOf(
         Triple('m', 900, true),
@@ -265,7 +291,7 @@ fun fromRoman(roman: String): Int {
     str.forEach { c ->
         val elem = rome.find { it.first == c }
         out += elem?.second ?: return -1
-        if (elem?.third ?: false) { // удаляем уже использованный элемент по типу IV IX и тд
+        if (elem.third) { // удаляем уже использованный элемент по типу IV IX и тд
             rome.remove(elem)
         }
     }
