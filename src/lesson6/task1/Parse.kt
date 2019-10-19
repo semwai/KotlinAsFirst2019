@@ -2,6 +2,7 @@
 
 package lesson6.task1
 
+import kotlinx.html.TR
 import lesson3.task1.findCharInFx
 import java.lang.Exception
 import java.lang.IllegalArgumentException
@@ -168,7 +169,11 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    //require(expression.count())
+    //println(expression.split(" ").toString())
+    return TODO()
+}
 
 /**
  * Сложная
@@ -180,7 +185,8 @@ fun plusMinus(expression: String): Int = TODO()
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    str.split(" ").count {  str.split(" ").count{ r -> r == it} }
+    return TODO()
+    //str.split(" ").count { str.split(" ").count { r -> r == it } }
 }
 
 /**
@@ -194,7 +200,32 @@ fun firstDuplicateIndex(str: String): Int {
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String
+//    description.split(";")
+//        .map {
+//            val p = it.trim().split(" ")
+//            println(p.toString())
+//            Pair(
+//                p[0],
+//                p[1].toFloat()
+//            )
+//        }.sortedWith(kotlin.Comparator { o1, o2 ->
+//            (o2.second - o1.second).toInt()
+//        })
+//        .first().first
+{
+    val l = description.split(";")
+    val products = mutableSetOf<Pair<String, Float>>()
+    l.forEach {
+        val p = it.trim().split(" ")
+        if (p.size != 2) return ""
+        if (p[1].toFloat() <= 0) return ""
+        products.add(Pair(p[0], p[1].toFloat()))
+    }
+    return products.sortedWith(kotlin.Comparator { o1, o2 ->
+        (o2.second - o1.second).toInt()
+    }).first().first
+}
 
 /**
  * Сложная
@@ -208,40 +239,35 @@ fun mostExpensive(description: String): String = TODO()
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int {
-    val rome = mutableMapOf(
-        "CM" to 900,
-        "M" to 1000,
-        "CD" to 400,
-        "D" to 500,
-        "XC" to 90,
-        "C" to 100,
-        "XL" to 40,
-        "L" to 50,
-        "IX" to 9,
-        "X" to 10,
-        "IV" to 4,
-        "V" to 5,
-        "I" to 1
-    ).toList().toMutableList()
-    print(rome.toString())
+    //Рисмкое представление, обозначение в десятичной, используется ли только 1 раз (можно поставить XX, но нелья IXIX)
+    val rome = mutableListOf(
+        Triple('m', 900, true),
+        Triple('M', 1000, false),
+        Triple('d', 400, true),
+        Triple('D', 500, false),
+        Triple('c', 90, true),
+        Triple('C', 100, false),
+        Triple('l', 40, true),
+        Triple('L', 50, false),
+        Triple('x', 9, true),
+        Triple('X', 10, false),
+        Triple('v', 4, true),
+        Triple('V', 5, false),
+        Triple('I', 1, false)
+    )
     var out = 0
-    roman.forEachIndexed { i, c ->
-        try {
-            if ("$c${roman[i + 1]}" == rome.filter { it.first == "$c${roman[i + 1]}" }.first().first && rome.first().first == "$c${roman[i + 1]}") {
-                out += rome.first().second
-                rome.removeAt(0)
-            } else {
-                rome.removeAt(0)
-            }
-        } catch (ex: Exception) {
+    var str = roman
+    mapOf(
+        "CM" to "m", "CD" to "d", "XC" to "c", "XL" to "l", "IX" to "x", "IV" to "v"
+    ).forEach {
+        str = str.replace(it.key, it.value)
+    }
+    str.forEach { c ->
+        val elem = rome.find { it.first == c }
+        out += elem?.second ?: return -1
+        if (elem?.third ?: false) { // удаляем уже использованный элемент по типу IV IX и тд
+            rome.remove(elem)
         }
-        if ("$c" == rome.filter { it.first == "$c" }.first().first && rome.first().first == "$c") {
-            out += rome.first().second
-            rome.removeAt(0)
-        } else {
-            rome.removeAt(0)
-        }
-
     }
     return out
 }

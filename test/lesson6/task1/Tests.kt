@@ -89,9 +89,9 @@ class Tests {
     @Test
     @Tag("Hard")
     fun plusMinus() {
+        assertEquals(6, plusMinus("2 + 31 - 40 + 13"))
         assertEquals(0, plusMinus("0"))
         assertEquals(4, plusMinus("2 + 2"))
-        assertEquals(6, plusMinus("2 + 31 - 40 + 13"))
         assertEquals(-1, plusMinus("0 - 1"))
         assertThrows(IllegalArgumentException::class.java) { plusMinus("+2") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("+ 4") }
@@ -112,20 +112,23 @@ class Tests {
     @Test
     @Tag("Hard")
     fun mostExpensive() {
-        assertEquals("", mostExpensive(""))
         assertEquals("Курица", mostExpensive("Хлеб 39.9; Молоко 62.5; Курица 184.0; Конфеты 89.9"))
+        assertEquals("", mostExpensive(""))
         assertEquals("Вино", mostExpensive("Вино 255.0"))
+        assertEquals("вкусняшка", mostExpensive("Вино 255.0;            вкусняшка 12332     ;м) 12 "))
     }
 
     @Test
     @Tag("Hard")
     fun fromRoman() {
+        assertEquals(1978, fromRoman("MCMLXXVIII"))
         assertEquals(1, fromRoman("I"))
         assertEquals(3000, fromRoman("MMM"))
-        assertEquals(1978, fromRoman("MCMLXXVIII"))
         assertEquals(694, fromRoman("DCXCIV"))
         assertEquals(49, fromRoman("XLIX"))
         assertEquals(-1, fromRoman("Z"))
+        assertEquals(-1, fromRoman("CMCMCMCM"))
+        assertEquals(-1, fromRoman("у меня получилось вставить сюда эмодзи💩👺"))
     }
 
     @Test
