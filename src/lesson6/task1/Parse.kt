@@ -345,26 +345,12 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
 
     var i = cells / 2 // позиция датчика
     var ip = 0 // номер текущей выполняемой команды
-    val funStack = Stack<Pair<Int, Int>>()  // стек позиций возврата из цикла
-    //проходим по командам и анализируем в каких местах идет переход на начало цикла
-    //myCommands.forEachIndexed { index, c -> if (c == '[') funStack.add(index) }
-    fun searchPair(index: Int): Int { // поиск ] для [ с учетом вложенности
-        var c = 1
-        val offset = commands.length - commands.substring(index + 1).length
-        commands.substring(index + 1).forEachIndexed { i, it ->
-            if (it == '[') c++
-            if (it == ']') {
-                c--
-                if (c == 0)
-                    return i + offset
-            }
-        }
-        return 0
-    }
+
+    var b = 0
     //начинаем выполнение инструкций
     while (ip < commands.length) {
-        myLimit--
-        if (myLimit == 0)
+
+        if (myLimit < 0)
             break
         when (commands[ip]) {
             '>' -> if (i >= cells - 1) throw IllegalStateException() else i++
@@ -372,23 +358,37 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             '+' -> data[i]++
             '-' -> data[i]--
 
-            '[' ->
-                if (data[i] != 0)
-                    funStack.push(Pair(ip, searchPair(ip)))
-                else {
-                    myLimit -= (searchPair(ip) - ip)
-                    ip = searchPair(ip)
+            '[' -> {
+                myLimit++
+                if (data[i] == 0) {
+                    b++
+                    while (b > 0) {
+                        ip++
+                        myLimit--
+                        if (commands[ip] == '[')
+                            b++
+                        if (commands[ip] == ']')
+                            b--
+                    }
                 }
-            ']' ->
-                if (data[i] != 0)
-                    ip = funStack.peek().first
-                else {
-                    val (a, b) = funStack.pop()
-                    myLimit -= (b - a - 1)
+            }
+            ']' ->{
+                myLimit++
+                if (data[i] != 0) {
+                    b++
+                    while (b > 0) {
+                        ip--
+                        if (commands[ip] == '[')
+                            b--
+                        if (commands[ip] == ']')
+                            b++
+                    }
                 }
+            }
         }
-        println("lim = $myLimit ip = $ip,\ti = $i,\tcommand = ${commands[ip]},box=${data[i]}  ,data = ${data.toList().toString()} stack = ${funStack.toList().toString()}")
+        println("lim = $myLimit ip = $ip,\ti = $i,\tcommand = ${commands[ip]},box=${data[i]}  ,data = ${data.toList().toString()}")
         ip++
+        myLimit--
 
     }
     return data.toList()
