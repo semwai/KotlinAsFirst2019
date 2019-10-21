@@ -99,6 +99,7 @@ class Tests {
         assertThrows(IllegalArgumentException::class.java) { plusMinus("4 - -2") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("44 - - 12") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("4 - + 12") }
+        assertThrows(IllegalArgumentException::class.java) { plusMinus("a") }
     }
 
     @Test
@@ -123,6 +124,7 @@ class Tests {
     @Test
     @Tag("Hard")
     fun fromRoman() {
+        assertEquals(-1, fromRoman("l"))
         assertEquals(1978, fromRoman("MCMLXXVIII"))
         assertEquals(1, fromRoman("I"))
         assertEquals(3000, fromRoman("MMM"))

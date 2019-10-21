@@ -177,7 +177,10 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    require(expression.isNotEmpty())
+    require(
+        expression.isNotEmpty() &&
+                !expression.map { (('0'..'9') + listOf('+', '-', ' ')).contains(it) }.contains(false)
+    )
     val arr = expression.split(" ")
     require(!arr.map {
         if (it.length == 1) true else
@@ -187,13 +190,12 @@ fun plusMinus(expression: String): Int {
     var isNum = true
     var sign = "+"
     arr.forEach {
-
         if (isNum) {
             out += if (sign == "+") it.toInt() else -it.toInt()
         } else {
-            when (it) {
-                "+" -> sign = it
-                "-" -> sign = it
+            sign = when (it) {
+                "+" -> it
+                "-" -> it
                 else -> throw IllegalArgumentException()
             }
         }
@@ -214,11 +216,11 @@ fun plusMinus(expression: String): Int {
 fun firstDuplicateIndex(str: String): Int {
     var arr = str.split(" ").map { it.toLowerCase() }
     val s = arr.filter { str -> arr.count { str == it } > 1 }
-
-    if (s.isEmpty()) return -1
-    return str.indexOf(s[0])
-
-    //str.split(" ").count { str.split(" ").count { r -> r == it } }
+    s.forEachIndexed { i, c ->
+        if (c == s[i + 1])
+            return str.toLowerCase().indexOf("$c $c")
+    }
+    return -1
 }
 
 /**
@@ -271,6 +273,9 @@ fun mostExpensive(description: String): String
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int {
+    //в задаче я переведу двоные символы в одинарные. Но изначальный ввод может уже содержать символы, которые я хочу получить только после преобразования
+    if (roman.map { "IVXLCDM".contains(it) }.contains(false))
+        return -1
     if (roman.isEmpty())
         return -1
     //Рисмкое представление, обозначение в десятичной, используется ли только 1 раз (можно поставить XX, но нелья IXIX)
