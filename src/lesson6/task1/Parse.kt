@@ -2,8 +2,6 @@
 
 package lesson6.task1
 
-import kotlinx.html.TR
-import lesson3.task1.findCharInFx
 import java.lang.Exception
 import java.lang.IllegalArgumentException
 import java.time.LocalDate
@@ -79,28 +77,19 @@ fun main() {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
-    return TODO()
     val m = listOf(
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря"
+        "января", "февраля", "марта", "апреля",
+        "мая", "июня", "июля", "августа",
+        "сентября", "октября", "ноября", "декабря"
     )
-    var date: String
+    val date: String
     try {
         val (day, month, year) = str.split(" ")
+        if (lesson2.task2.daysInMonth(m.indexOf(month) + 1, year.toInt()) < day.toInt())
+            return ""
         date = String.format("%02d.%02d.%s", day.toInt(), m.indexOf(month) + 1, year)
         LocalDate.parse(date, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
     } catch (e: Exception) {
-        println(e.message)
         return ""
     }
     return date
@@ -117,7 +106,25 @@ fun dateStrToDigit(str: String): String {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val m = listOf(
+        "января", "февраля", "марта", "апреля",
+        "мая", "июня", "июля", "августа",
+        "сентября", "октября", "ноября", "декабря"
+    )
+    try {
+        val arr = digital.split(".")
+        if (arr.size != 3)
+            return ""
+        val (day, month, year) = listOf(arr[0].toInt(), arr[1].toInt(), arr[2].toInt())
+        if (lesson2.task2.daysInMonth(month, year) < day)
+            return ""
+
+        return String.format("%d %s %s", day, m[month - 1], year)
+    } catch (e: Exception) {
+        return ""
+    }
+}
 
 /**
  * Средняя
@@ -170,6 +177,7 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
+    require(expression.isNotEmpty())
     val arr = expression.split(" ")
     require(!arr.map {
         if (it.length == 1) true else
@@ -372,7 +380,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     }
                 }
             }
-            ']' ->{
+            ']' -> {
                 myLimit++
                 if (data[i] != 0) {
                     b++
