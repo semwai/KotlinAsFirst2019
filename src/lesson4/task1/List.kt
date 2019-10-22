@@ -156,7 +156,7 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
-fun times(a: List<Int>, b: List<Int>): Int = a.mapIndexed { index, i -> i * b[index] }.sumBy { it }
+fun times(a: List<Int>, b: List<Int>): Int = a.mapIndexed { index, i -> i * b[index] }.sum()
 
 
 /**
@@ -206,12 +206,10 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
 fun factorize(n: Int): List<Int> {
     val outlist = mutableListOf<Int>()
     var number = n
-    while (number > 1) {
-        for (i in 2..(number)) {
-            while (number % i == 0) {
-                number /= i;
-                outlist.add(i)
-            }
+    for (i in 2..(number)) {
+        while (number % i == 0) {
+            number /= i;
+            outlist.add(i)
         }
     }
     return outlist
@@ -270,7 +268,10 @@ fun convertToString(n: Int, base: Int) = if (n == 0) "0" else
 fun decimal(digits: List<Int>, base: Int): Int {
     var b = 1
     var out = 0
-    digits.reversed().forEach { out += it * b; b *= base }
+    digits.reversed().forEach {
+        out += it * b
+        b *= base
+    }
     return out
 
 }

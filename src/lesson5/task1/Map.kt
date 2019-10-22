@@ -93,7 +93,7 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> =
-    grades.values.distinct().map { v -> Pair(v, grades.filterValues { it == v }.keys.toList()) }.toMap()
+    grades.toList().groupBy { it.second }.map { it.key to it.value.map { (first) -> first } }.toMap()
 
 
 /**
@@ -126,8 +126,6 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  *     -> a changes to mutableMapOf() aka becomes empty
  */
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
-    //a.filter { p -> !b.map { it.key == p.key && it.value == p.value }.contains(true) } жаль, что данная функция возвращает новый мэп, а не меняет старый
-
     val item = a.iterator()
     while (item.hasNext()) {
         val v = item.next()
@@ -182,12 +180,8 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> =
-    (stockPrices.distinctBy { it.first }
-        .map {
-            it.first to
-                    ((stockPrices.filter { (first) -> first == it.first }.sumByDouble { p -> p.second })
-                            / stockPrices.count { (first) -> first == it.first })
-        }).toMap()
+    stockPrices.groupBy { it.first }.map { it.key to it.value.sumByDouble { pair -> pair.second } / it.value.size }.toMap()
+
 
 /**
  * Средняя
@@ -204,16 +198,9 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    val n = stuff.filter { it.value.first == kind }
-    return if (n.count() == 0) null else
-        n.map {
-            Pair(
-                it.key,
-                it.value.second
-            )
-        }.toList().toSortedSet(compareBy { it.second }).first().first
-}
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? =
+    stuff.filter { it.value.first == kind }.minBy { it.value.second }?.key
+
 
 /**
  * Средняя
@@ -225,7 +212,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean =
-    !word.map { chars.contains(it.toUpperCase()) || chars.contains(it.toLowerCase()) }.contains(false)
+    word.all { chars.contains(it.toUpperCase()) || chars.contains(it.toLowerCase()) }
 
 /**
  * Средняя
@@ -239,9 +226,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean =
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> =
-    list.filter { e -> list.count { it == e } > 1 }.distinct().map { e -> e to list.count { it == e } }.toMap()
-
+fun extractRepeats(list: List<String>): Map<String, Int> = list.groupingBy { it }.eachCount().filterValues { it > 1 }
 
 /**
  * Средняя

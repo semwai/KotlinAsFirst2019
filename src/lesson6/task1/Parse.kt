@@ -178,8 +178,7 @@ fun bestHighJump(jumps: String): Int = TODO()
  */
 fun plusMinus(expression: String): Int {
     require(
-        expression.isNotEmpty() &&
-                !expression.map { (('0'..'9') + listOf('+', '-', ' ')).contains(it) }.contains(false)
+        expression.isNotEmpty() && expression.all { (('0'..'9') + listOf('+', '-', ' ')).contains(it) }
     )
     val arr = expression.split(" ")
     require(!arr.map {
@@ -214,7 +213,7 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    var arr = str.split(" ").map { it.toLowerCase() }
+    val arr = str.split(" ").map { it.toLowerCase() }
     val s = arr.filter { str -> arr.count { str == it } > 1 }
     s.forEachIndexed { i, c ->
         if (c == s[i + 1])
@@ -273,10 +272,8 @@ fun mostExpensive(description: String): String
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int {
-    //в задаче я переведу двоные символы в одинарные. Но изначальный ввод может уже содержать символы, которые я хочу получить только после преобразования
-    if (roman.map { "IVXLCDM".contains(it) }.contains(false))
-        return -1
-    if (roman.isEmpty())
+    //в задаче я переведу двойные символы в одинарные. Но изначальный ввод может уже содержать символы, которые я хочу получить только после преобразования
+    if (!roman.any { "IVXLCDM".contains(it) } || roman.isEmpty())
         return -1
     //Рисмкое представление, обозначение в десятичной, используется ли только 1 раз (можно поставить XX, но нелья IXIX)
     val rome = mutableListOf(
