@@ -76,12 +76,13 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
+val m = listOf(
+    "января", "февраля", "марта", "апреля",
+    "мая", "июня", "июля", "августа",
+    "сентября", "октября", "ноября", "декабря"
+)
+
 fun dateStrToDigit(str: String): String {
-    val m = listOf(
-        "января", "февраля", "марта", "апреля",
-        "мая", "июня", "июля", "августа",
-        "сентября", "октября", "ноября", "декабря"
-    )
     val date: String
     try {
         val (day, month, year) = str.split(" ")
@@ -107,16 +108,11 @@ fun dateStrToDigit(str: String): String {
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String {
-    val m = listOf(
-        "января", "февраля", "марта", "апреля",
-        "мая", "июня", "июля", "августа",
-        "сентября", "октября", "ноября", "декабря"
-    )
     try {
         val arr = digital.split(".")
         if (arr.size != 3)
             return ""
-        val (day, month, year) = listOf(arr[0].toInt(), arr[1].toInt(), arr[2].toInt())
+        val (day, month, year) = arr.map { it.toInt() }
         if (lesson2.task2.daysInMonth(month, year) < day)
             return ""
 
@@ -181,20 +177,17 @@ fun plusMinus(expression: String): Int {
         expression.isNotEmpty() && expression.all { (('0'..'9') + listOf('+', '-', ' ')).contains(it) }
     )
     val arr = expression.split(" ")
-    require(!arr.map {
-        if (it.length == 1) true else
-            !(it[0] == '+' || it[0] == '-')
-    }.contains(false))
+    require(arr.all { if (it.length == 1) true else !(it[0] == '+' || it[0] == '-') })
     var out = 0
     var isNum = true
-    var sign = "+"
+    var sign = 1
     arr.forEach {
         if (isNum) {
-            out += if (sign == "+") it.toInt() else -it.toInt()
+            out += sign * it.toInt()
         } else {
             sign = when (it) {
-                "+" -> it
-                "-" -> it
+                "+" -> 1
+                "-" -> -1
                 else -> throw IllegalArgumentException()
             }
         }

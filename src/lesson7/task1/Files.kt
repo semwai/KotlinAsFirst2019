@@ -53,7 +53,20 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    val str = File(inputName).readText().split(" ").map { it.toLowerCase() }.joinToString(separator = " ")
+    val out = mutableMapOf<String, Int>()
+    substrings.forEach {
+        var i = -1
+        var index = -1
+        do {
+            index = str.indexOf(it.toLowerCase(), index + 1)
+            i++
+        } while (index != -1)
+        out[it] = i
+    }
+    return out
+}
 //    File(inputName)
 //        .readText()
 //        .map {  it to substrings.count { str -> it.toLowerCase().contains(str.toLowerCase()) } }.toMap()
@@ -73,7 +86,81 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val repl = mapOf(
+        "жы" to "жи",
+        "жя" to "жа",
+        "жю" to "жу",
+        "чы" to "чи",
+        "чя" to "ча",
+        "чю" to "чу",
+        "шы" to "ши",
+        "шя" to "ша",
+        "шю" to "шу",
+        "щы" to "щи",
+        "щя" to "ща",
+        "щю" to "щу",
+
+        "Жы" to "Жи",
+        "Жя" to "Жа",
+        "Жю" to "Жу",
+        "Чы" to "Чи",
+        "Чя" to "Ча",
+        "Чю" to "Чу",
+        "Шы" to "Ши",
+        "Шя" to "Ша",
+        "Шю" to "Шу",
+        "Щы" to "Щи",
+        "Щя" to "Ща",
+        "Щю" to "Щу",
+
+        "ЖЫ" to "ЖИ",
+        "ЖЯ" to "ЖА",
+        "ЖЮ" to "ЖУ",
+        "ЧЫ" to "ЧИ",
+        "ЧЯ" to "ЧА",
+        "ЧЮ" to "ЧУ",
+        "ШЫ" to "ШИ",
+        "ШЯ" to "ША",
+        "ШЮ" to "ШУ",
+        "ЩЫ" to "ЩИ",
+        "ЩЯ" to "ЩА",
+        "ЩЮ" to "ЩЮ",
+
+        "жЫ" to "жИ",
+        "жЯ" to "жА",
+        "жЮ" to "жУ",
+        "чЫ" to "чИ",
+        "чЯ" to "чА",
+        "чЮ" to "чУ",
+        "шЫ" to "шИ",
+        "шЯ" to "шА",
+        "шЮ" to "шУ",
+        "щЫ" to "щИ",
+        "щЯ" to "щА",
+        "щЮ" to "щУ"
+    )
+//    File(outputName).writeText(
+//        File(inputName)
+//            .readText()
+//            .split(" ")
+//            .map { v ->
+//                repl.map { if (!listOf("жюри", "брошюра", "парашют").contains(v.toLowerCase())) v.replace(it.key, it.value) else v }
+//            }.joinToString(separator = " ")
+//    )
+    println(
+        File(inputName)
+            .readText()
+            .split(" ")
+            .map { v ->
+                repl.forEach {
+                    if (!listOf("жюри", "брошюра", "парашют").contains(v.toLowerCase())) v.replace(
+                        it.key,
+                        it.value
+                    ) else v
+                }
+                v
+            }.joinToString(separator = " ")
+    )
 }
 
 /**
