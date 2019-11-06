@@ -79,14 +79,23 @@ data class Circle(val center: Point, val radius: Double) {
      * расстояние между их центрами минус сумма их радиусов.
      * Расстояние между пересекающимися окружностями считать равным 0.0.
      */
-    fun distance(other: Circle): Double = TODO()
+    fun distance(other: Circle): Double {
+        val d = sqrt(sqr(center.x - other.center.x) + sqr(center.y - other.center.y))
+        val r = radius + other.radius
+        return if (d > r) return d - r else 0.0
+
+    }
 
     /**
      * Тривиальная
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = TODO()
+    fun contains(p: Point): Boolean {
+        val d1 = sqrt(sqr(center.x - radius) + sqr(center.y - radius))
+        val d2 = sqrt(sqr(center.x - p.x) + sqr(center.y - p.y))
+        return d1 >= d2
+    }
 }
 
 /**
@@ -106,7 +115,18 @@ data class Segment(val begin: Point, val end: Point) {
  * Дано множество точек. Вернуть отрезок, соединяющий две наиболее удалённые из них.
  * Если в множестве менее двух точек, бросить IllegalArgumentException
  */
-fun diameter(vararg points: Point): Segment = TODO()
+fun diameter(vararg points: Point): Segment {
+    require(points.size > 1)
+    //для каждой точки находим самую дальнюю для нее
+    val s = points.map { p ->
+        points.map { it }.maxBy { sqr(it.x - p.x) + sqr(it.y - p.y) }
+    }
+    //преобразовываем в вид [точка1-самая дальняя для точки1, точка2-самая дальняя для точки2..]
+    val g = points zip s
+    val out = g.maxBy { sqr(it.first.x - it.second!!.x) + sqr(it.first.y - it.second!!.y) }
+    //вторая точка имеет тип Point?, а не Point. NullException'а быть не должно, т.к. у любой точки есть пара всегда
+    return Segment(out!!.first, Point(out.second!!.x, out.second!!.y))
+}
 
 /**
  * Простая
@@ -114,7 +134,14 @@ fun diameter(vararg points: Point): Segment = TODO()
  * Построить окружность по её диаметру, заданному двумя точками
  * Центр её должен находиться посередине между точками, а радиус составлять половину расстояния между ними
  */
-fun circleByDiameter(diameter: Segment): Circle = TODO()
+fun circleByDiameter(diameter: Segment): Circle {
+    val center = Point(
+        (diameter.begin.x + diameter.end.x) / 2,
+        (diameter.begin.y + diameter.end.y) / 2
+    )
+    val r = sqrt(sqr(diameter.begin.x - center.x) + sqr(diameter.begin.y - center.y))
+    return Circle(center, r)
+}
 
 /**
  * Прямая, заданная точкой point и углом наклона angle (в радианах) по отношению к оси X.
