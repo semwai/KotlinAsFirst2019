@@ -83,18 +83,15 @@ val m = listOf(
 )
 
 fun dateStrToDigit(str: String): String {
-    val date: String
     try {
         val (day, month, year) = str.split(" ")
-        if (lesson2.task2.daysInMonth(m.indexOf(month) + 1, year.toInt()) < day.toInt())
+        val indexOfM = m.indexOf(month) + 1;
+        if (lesson2.task2.daysInMonth(m.indexOf(month) + 1, year.toInt()) < day.toInt() || indexOfM == 0)
             return ""
-        date = String.format("%02d.%02d.%s", day.toInt(), m.indexOf(month) + 1, year)
-        LocalDate.parse(date, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+        return String.format("%02d.%02d.%s", day.toInt(), indexOfM, year)
     } catch (e: Exception) {
         return ""
     }
-    return date
-
 }
 
 /**
@@ -174,7 +171,7 @@ fun bestHighJump(jumps: String): Int = TODO()
  */
 fun plusMinus(expression: String): Int {
     require(
-        expression.isNotEmpty() && expression.all { (('0'..'9') + listOf('+', '-', ' ')).contains(it) }
+        expression.isNotEmpty() && expression.split("\\d+(\\s[+|-]\\s)|(\\d+\$)".toRegex()).all { it.isEmpty() }
     )
     val arr = expression.split(" ")
     require(arr.all { if (it.length == 1) true else !(it[0] == '+' || it[0] == '-') })
@@ -227,18 +224,6 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше либо равны нуля.
  */
 fun mostExpensive(description: String): String
-//    description.split(";")
-//        .map {
-//            val p = it.trim().split(" ")
-//            println(p.toString())
-//            Pair(
-//                p[0],
-//                p[1].toFloat()
-//            )
-//        }.sortedWith(kotlin.Comparator { o1, o2 ->
-//            (o2.second - o1.second).toInt()
-//        })
-//        .first().first
 {
     val l = description.split(";")
     val products = mutableSetOf<Pair<String, Float>>()
@@ -248,9 +233,9 @@ fun mostExpensive(description: String): String
         if (p[1].toFloat() < 0) return ""
         products.add(Pair(p[0], p[1].toFloat()))
     }
-    return products.sortedWith(kotlin.Comparator { o1, o2 ->
-        (o2.second - o1.second).toInt()
-    }).first().first
+    return products.maxWith(Comparator { o1, o2 ->
+        (o1.second - o2.second).toInt()
+    })!!.first
 }
 
 /**
@@ -266,7 +251,7 @@ fun mostExpensive(description: String): String
  */
 fun fromRoman(roman: String): Int {
     //в задаче я переведу двойные символы в одинарные. Но изначальный ввод может уже содержать символы, которые я хочу получить только после преобразования
-    if (!roman.any { "IVXLCDM".contains(it) } || roman.isEmpty())
+    if (!roman.any { it in "IVXLCDM" } || roman.isEmpty())
         return -1
     //Рисмкое представление, обозначение в десятичной, используется ли только 1 раз (можно поставить XX, но нелья IXIX)
     val rome = mutableListOf(
