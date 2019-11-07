@@ -145,7 +145,11 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    if (!jumps.all { it in ('0'..'9') + listOf('%', '-', ' ') })
+        return -1
+    return jumps.split(" ").map { it.toIntOrNull() }.filter { it != null }.maxBy { it ?: -1 } ?: -1
+}
 
 /**
  * Сложная
@@ -223,8 +227,7 @@ fun firstDuplicateIndex(str: String): Int {
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
  */
-fun mostExpensive(description: String): String
-{
+fun mostExpensive(description: String): String {
     val l = description.split(";")
     val products = mutableSetOf<Pair<String, Float>>()
     l.forEach {
