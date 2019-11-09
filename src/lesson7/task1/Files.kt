@@ -2,7 +2,9 @@
 
 package lesson7.task1
 
+import lesson3.task1.digitNumber
 import java.io.File
+import kotlin.math.pow
 
 /**
  * Пример
@@ -181,7 +183,13 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    var maxLen = File(inputName).readLines().maxBy { it.length }!!.length
+    for (line in File(inputName).readLines()) {
+        outputStream.write(" ".repeat((maxLen - line.trim().length) / 2) + line.trim())
+        outputStream.newLine()
+    }
+    outputStream.close()
 }
 
 /**
@@ -212,7 +220,7 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+
 }
 
 /**
@@ -233,7 +241,15 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  * Ключи в ассоциативном массиве должны быть в нижнем регистре.
  *
  */
-fun top20Words(inputName: String): Map<String, Int> = TODO()
+fun top20Words(inputName: String): Map<String, Int> {
+    val words = mutableListOf<String>()
+    for (line in File(inputName).readLines()) {
+        words.addAll(line.filter { it in ('a'..'z') + ('A'..'Z') + ('а'..'я') + ('А'..'Я') + 'ё' + 'Ё' + 'й' + 'Й' + ' ' + '-' + '.' }
+            .split("\\s|-|\\.".toRegex()))
+    }
+    return words.groupBy { it.toLowerCase() }.map { it.key to it.value.size }.sortedBy { -it.second }
+        .filter { it.first.isNotEmpty() }.take(20).toMap()
+}
 
 /**
  * Средняя
@@ -492,7 +508,37 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    val mn = mutableListOf<Int>()
+    var n = rhv
+    while (n > 0) {
+        mn.add(n % 10)
+        n /= 10
+    }
+    var out = 0
+    var v = 1
+    for (i in mn) {
+        out += lhv * i * v
+        v *= 10
+    }
+    var outstr = buildString { }
+    val maxlen = maxOf(digitNumber(out), digitNumber(mn.last()) + mn.size) + 1
+    outstr +=
+        " ".repeat(maxlen - digitNumber(lhv)) + "$lhv\n" +
+                '*' + " ".repeat(maxlen - digitNumber(rhv) - 1) + "$rhv\n" +
+                "-".repeat(maxlen) + '\n'
+    var index = 0
+    for (i in mn) {
+        val temp = lhv * i
+        outstr += if (index > 0) '+' else ' '
+        index++
+        outstr += " ".repeat(maxlen - digitNumber(temp) - index) + "$temp\n"
+
+    }
+    outstr +=
+        "-".repeat(maxlen) + '\n' +
+                " ".repeat(maxlen - digitNumber(out)) + "$out"
+
+    File(outputName).writeText(outstr)
 }
 
 
