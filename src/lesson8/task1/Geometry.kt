@@ -159,7 +159,19 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Найти точку пересечения с другой линией.
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
-    fun crossPoint(other: Line): Point = TODO()
+    fun crossPoint(other: Line): Point {
+        /*
+         k1x1 + k2y1 = b1
+         k3x2 + k4y2 = b2
+         -x*sin(angle)+y*cos(angle) = b
+         -x*sin(other.angle)+y*cos(other.angle) = other.b
+         решаем методом крамера c помощью трех определителей
+         */
+        val opr = -sin(angle) * cos(other.angle) + sin(other.angle) * cos(angle)
+        val oprX = b * cos(other.angle) - other.b * cos(angle)
+        val oprY = -sin(angle) * other.b + sin(other.angle) * b
+        return Point(oprX / opr, oprY / opr)
+    }
 
     override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
 
@@ -206,7 +218,21 @@ fun bisectorByPoints(a: Point, b: Point): Line {
  * Задан список из n окружностей на плоскости. Найти пару наименее удалённых из них.
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
-fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
+fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
+    return TODO()
+    require(circles.size > 1)
+    //для каждой окружности находим самую ближнюю для нее
+    val s = circles.map { p ->
+        circles.map { it }.filter { !p.equals(it) }
+            .minBy { sqr(it.center.x - p.center.x - p.radius - it.radius) + sqr(it.center.y - p.center.y - p.radius - it.radius) }
+    }
+    val g = circles zip s
+    val out =
+        g.minBy { sqr(it.first.center.x - it.second!!.center.x - it.first.radius - it.second!!.radius) + sqr(it.first.center.y - it.second!!.center.y - it.first.radius - it.second!!.radius) }
+    return Circle(out!!.second!!.center, out.second!!.radius) to Circle(out!!.first.center, out.first.radius)
+
+
+}
 
 /**
  * Сложная
@@ -217,7 +243,11 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
+    val center = bisectorByPoints(a, b).crossPoint(bisectorByPoints(a, c))
+    val radius = center.distance(a)
+    return Circle(center, radius)
+}
 
 /**
  * Очень сложная
@@ -230,5 +260,18 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
+fun minContainingCircle(vararg points: Point): Circle {
+    require(points.isNotEmpty())
+    if (points.size == 1)
+        return Circle(Point(points[0].x, points[0].y), 0.0)
+    if (points.size == 2)
+        return circleByThreePoints(points[0], points[1], points[1])
+
+    val s = points.sortedBy { sqr(it.x) + sqr(it.y) }
+    val c3 = circleByThreePoints(s[0], s[1], s[2])
+    for ((x, y) in s)
+        if (c3.radius > sqrt(sqr(x - c3.center.x) + sqr(y - c3.center.y)))
+            return circleByThreePoints(s[0], s[1], s[1])
+    return c3
+}
 
