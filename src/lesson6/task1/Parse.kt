@@ -328,29 +328,25 @@ fun fromRoman(roman: String): Int {
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var myLimit = limit
     //проверка на ошибочный ввод команд
-    require(!commands.map { listOf('>', '<', '+', '-', '[', ']', ' ').contains(it) }.contains(false))
+    require(commands.all { it in listOf('>', '<', '+', '-', '[', ']', ' ') })
     //если ] в коде раньше, чем [
     require(commands.indexOf(']') >= commands.indexOf('['))
     require(commands.count { it == '[' } - commands.count { it == ']' } == 0)
     val data = IntArray(cells) { 0 }
-
     var i = cells / 2 // позиция датчика
     var ip = 0 // номер текущей выполняемой команды
-
     var b = 0
     //начинаем выполнение инструкций
     while (ip < commands.length) {
-
         if (myLimit < 0)
             break
+        //println("lim = $myLimit ip = $ip,\ti = $i,\tcommand = ${commands[ip]},box=${data[i]}  ,data = ${data.toList().toString()}")
         when (commands[ip]) {
             '>' -> if (i >= cells - 1) throw IllegalStateException() else i++
             '<' -> if (i <= 0) throw IllegalStateException() else i--
             '+' -> data[i]++
             '-' -> data[i]--
-
             '[' -> {
-                myLimit++
                 if (data[i] == 0) {
                     b++
                     while (b > 0) {
@@ -364,7 +360,6 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                 }
             }
             ']' -> {
-                myLimit++
                 if (data[i] != 0) {
                     b++
                     while (b > 0) {
@@ -375,12 +370,12 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                             b++
                     }
                 }
+                print(commands[ip])
             }
         }
-        println("lim = $myLimit ip = $ip,\ti = $i,\tcommand = ${commands[ip]},box=${data[i]}  ,data = ${data.toList().toString()}")
+        //println("lim = $myLimit ip = $ip,\ti = $i,\tcommand = ${commands[ip]},box=${data[i]}  ,data = ${data.toList().toString()}")
         ip++
         myLimit--
-
     }
     return data.toList()
 }

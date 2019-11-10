@@ -88,6 +88,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
+    TODO()
     val repl = mapOf(
         "жы" to "жи",
         "жя" to "жа",
@@ -184,8 +185,11 @@ fun sibilants(inputName: String, outputName: String) {
  */
 fun centerFile(inputName: String, outputName: String) {
     val outputStream = File(outputName).bufferedWriter()
-    var maxLen = File(inputName).readLines().maxBy { it.length }!!.length
-    for (line in File(inputName).readLines()) {
+    val f = File(inputName)
+    if (f.readLines().isEmpty())
+        outputStream.write("")
+    var maxLen = f.readLines().maxBy { it.length }!!.length
+    for (line in f.readLines()) {
         outputStream.write(" ".repeat((maxLen - line.trim().length) / 2) + line.trim())
         outputStream.newLine()
     }
@@ -220,7 +224,7 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-
+    TODO()
 }
 
 /**
