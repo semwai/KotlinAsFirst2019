@@ -114,7 +114,12 @@ Basic, Ruby, Swift.
         Вывести его в выходной файл с именем outputName, выровняв по центру."""
         )
         File("temp.txt").delete()
-
+        centerFile("input/empty.txt", "temp.txt")
+        assertFileContent(
+            "temp.txt",
+            ""
+        )
+        File("temp.txt").delete()
     }
 
     @Test
@@ -143,7 +148,12 @@ Basic, Ruby, Swift.
 между                более               правой               парой               соседних               слов."""
         )
         File("temp.txt").delete()
-
+        alignFileByWidth("input/empty.txt", "temp.txt")
+        assertFileContent(
+            "temp.txt",
+            ""
+        )
+        File("temp.txt").delete()
     }
 
     @Test
@@ -213,6 +223,9 @@ Basic, Ruby, Swift.
     fun chooseLongestChaoticWord() {
         chooseLongestChaoticWord("input/chaotic_in1.txt", "temp.txt")
         assertFileContent("temp.txt", "Карминовый, Некрасивый")
+        File("temp.txt").delete()
+        chooseLongestChaoticWord("input/empty.txt", "temp.txt")
+        assertFileContent("temp.txt", "")
         File("temp.txt").delete()
     }
 

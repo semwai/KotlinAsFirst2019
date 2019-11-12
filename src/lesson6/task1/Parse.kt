@@ -236,9 +236,7 @@ fun mostExpensive(description: String): String {
         if (p[1].toFloat() < 0) return ""
         products.add(Pair(p[0], p[1].toFloat()))
     }
-    return products.maxWith(Comparator { o1, o2 ->
-        (o1.second - o2.second).toInt()
-    })!!.first
+    return products.maxBy { a -> a.second }!!.first
 }
 
 /**

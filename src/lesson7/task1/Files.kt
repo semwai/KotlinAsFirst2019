@@ -5,6 +5,7 @@ package lesson7.task1
 import lesson3.task1.digitNumber
 import ru.spbstu.wheels.tail
 import java.io.File
+import java.lang.Exception
 import kotlin.math.pow
 
 /**
@@ -184,17 +185,17 @@ fun sibilants(inputName: String, outputName: String) {
  * 4) Число строк в выходном файле должно быть равно числу строк во входном (в т. ч. пустых)
  *
  */
-fun centerFile(inputName: String, outputName: String) {
+fun centerFile(inputName: String, outputName: String) = try {
     val outputStream = File(outputName).bufferedWriter()
     val f = File(inputName).readLines()
-    if (f.isEmpty() || f[0] == "" && f.size == 1)
-        outputStream.write("")
-    var maxLen = f.maxBy { it.length }!!.length
+    var maxLen = f.maxBy { it.length }?.length ?: 0
     for (line in f) {
         outputStream.write(" ".repeat((maxLen - line.trim().length) / 2) + line.trim())
         outputStream.newLine()
     }
     outputStream.close()
+} catch (e: Exception) {
+    File(outputName).writeText("")
 }
 
 /**
@@ -224,12 +225,10 @@ fun centerFile(inputName: String, outputName: String) {
  * 7) В самой длинной строке каждая пара соседних слов должна быть отделена В ТОЧНОСТИ одним пробелом
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
-fun alignFileByWidth(inputName: String, outputName: String) {
+fun alignFileByWidth(inputName: String, outputName: String) = try {
     val outputStream = File(outputName).bufferedWriter()
     val f = File(inputName).readLines()
-    if (f.isEmpty() || f[0] == "" && f.size == 1)
-        outputStream.write("")
-    var maxLen = f.maxBy { it.length }!!.trim().length
+    var maxLen = f.maxBy { it.length }?.trim()?.length ?: 0
     for (line in f) {
         val l = line.trim().split(" ")
         if (l.size < 2) {
@@ -250,6 +249,8 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         outputStream.newLine()
     }
     outputStream.close()
+} catch (e: Exception) {
+    File(outputName).writeText("")
 }
 
 /**
@@ -343,7 +344,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  *
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
-fun chooseLongestChaoticWord(inputName: String, outputName: String) {
+fun chooseLongestChaoticWord(inputName: String, outputName: String) = try {
     val text = File(inputName).readLines()
     val keys = text.map { it.toLowerCase() }
         .filter {
@@ -353,6 +354,8 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
         }
         .groupBy { it.length }.map { it.value }.first()
     File(outputName).writeText(text.filter { it.toLowerCase() in keys }.joinToString(separator = ", "))
+} catch (e: Exception) {
+    File(outputName).writeText("")
 }
 
 /**
