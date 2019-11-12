@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import lesson3.task1.digitNumber
+import ru.spbstu.wheels.tail
 import java.io.File
 import kotlin.math.pow
 
@@ -224,7 +225,31 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    val f = File(inputName)
+    if (f.readLines().isEmpty())
+        outputStream.write("")
+    var maxLen = f.readLines().maxBy { it.length }!!.trim().length
+    for (line in f.readLines()) {
+        val l = line.trim().split(" ")
+        if (l.size < 2) {
+            outputStream.write(l[0])
+            outputStream.newLine()
+            continue
+        }
+        var size = (maxLen - (line.count { it != ' ' }))
+        var i = 0
+        val k = List(l.size - 1) { 0 }.toMutableList()
+        while (size > 0) {
+            k[i % (l.size - 1)]++
+            i++
+            size--
+        }
+        l.take(l.size - 1).zip(k).map { outputStream.write(it.first + " ".repeat(it.second)) }
+        outputStream.write(l.last())
+        outputStream.newLine()
+    }
+    outputStream.close()
 }
 
 /**
@@ -319,7 +344,15 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).readLines()
+    val keys = text.map { it.toLowerCase() }
+        .filter {
+            it.all { char ->
+                it.count { g -> g == char } == 1
+            }
+        }
+        .groupBy { it.length }.map { it.value }.first()
+    File(outputName).writeText(text.filter { it.toLowerCase() in keys }.joinToString(separator = ", "))
 }
 
 /**
@@ -525,7 +558,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         v *= 10
     }
     var outstr = buildString { }
-    val maxlen = maxOf(digitNumber(out), digitNumber(mn.last()) + mn.size) + 1
+    val maxlen = maxOf(digitNumber(out), digitNumber(mn.last()) + mn.size - 1) + 1
     outstr +=
         " ".repeat(maxlen - digitNumber(lhv)) + "$lhv\n" +
                 '*' + " ".repeat(maxlen - digitNumber(rhv) - 1) + "$rhv\n" +
@@ -536,12 +569,10 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         outstr += if (index > 0) '+' else ' '
         index++
         outstr += " ".repeat(maxlen - digitNumber(temp) - index) + "$temp\n"
-
     }
     outstr +=
         "-".repeat(maxlen) + '\n' +
                 " ".repeat(maxlen - digitNumber(out)) + "$out"
-
     File(outputName).writeText(outstr)
 }
 
