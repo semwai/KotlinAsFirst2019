@@ -186,11 +186,11 @@ fun sibilants(inputName: String, outputName: String) {
  */
 fun centerFile(inputName: String, outputName: String) {
     val outputStream = File(outputName).bufferedWriter()
-    val f = File(inputName)
-    if (f.readLines().isEmpty())
+    val f = File(inputName).readLines()
+    if (f.isEmpty() || f[0] == "" && f.size == 1)
         outputStream.write("")
-    var maxLen = f.readLines().maxBy { it.length }!!.length
-    for (line in f.readLines()) {
+    var maxLen = f.maxBy { it.length }!!.length
+    for (line in f) {
         outputStream.write(" ".repeat((maxLen - line.trim().length) / 2) + line.trim())
         outputStream.newLine()
     }
@@ -226,11 +226,11 @@ fun centerFile(inputName: String, outputName: String) {
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
     val outputStream = File(outputName).bufferedWriter()
-    val f = File(inputName)
-    if (f.readLines().isEmpty())
+    val f = File(inputName).readLines()
+    if (f.isEmpty() || f[0] == "" && f.size == 1)
         outputStream.write("")
-    var maxLen = f.readLines().maxBy { it.length }!!.trim().length
-    for (line in f.readLines()) {
+    var maxLen = f.maxBy { it.length }!!.trim().length
+    for (line in f) {
         val l = line.trim().split(" ")
         if (l.size < 2) {
             outputStream.write(l[0])
