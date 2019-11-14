@@ -121,7 +121,8 @@ class Tests {
     @Tag("Trivial")
     fun circleContains() {
         val center = Point(1.0, 2.0)
-        assertTrue(Circle(center, 1.0).contains(center))
+        assertFalse(Circle(center, 2.0).contains(Point(0.0, 0.0)))
+        assertFalse(Circle(Point(0.41684210226478335, -632.0), 0.10502637232555945).contains(Point(0.6613764719928018, -632.0)))
         assertFalse(Circle(center, 2.0).contains(Point(0.0, 0.0)))
         assertTrue(Circle(Point(0.0, 3.0), 5.01).contains(Point(-4.0, 0.0)))
     }

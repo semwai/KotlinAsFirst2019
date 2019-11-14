@@ -34,15 +34,25 @@ class Tests {
     @Test
     @Tag("Normal")
     fun getSetString() {
+        val m = createMatrix(1,3,"")
+        var index = 0
+        println(m)
+        for (row in 0 until m.height) {
+            for (column in 0 until m.width) {
+                println("$row $column")
+                assertEquals("", m[row, column])
+            }
+        }
         val matrix = createMatrix(2, 2, "")
         val strings = listOf("alpha", "beta", "gamma", "omega")
-        var index = 0
+        index = 0
         for (row in 0 until matrix.height) {
             for (column in 0 until matrix.width) {
                 matrix[Cell(row, column)] = strings[index++]
             }
         }
         index = 0
+        println(matrix)
         for (row in 0 until matrix.height) {
             for (column in 0 until matrix.width) {
                 assertEquals(strings[index++], matrix[row, column])

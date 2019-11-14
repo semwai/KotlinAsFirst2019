@@ -53,18 +53,18 @@ fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> {
  */
 class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : Matrix<E> {
 
-    private val values = MutableList(height + 1) { MutableList(width + 1) { e } }
+    private val values = MutableList(height) { MutableList(width + 1) { e } }
 
-    override fun get(row: Int, column: Int): E = values[column][row]
+    override fun get(row: Int, column: Int): E = values[row][column]
 
-    override fun get(cell: Cell): E = values[cell.column][cell.row]
+    override fun get(cell: Cell): E = values[cell.row][cell.column]
 
     override fun set(row: Int, column: Int, value: E) {
-        values[column][row] = value
+        values[row][column] = value
     }
 
     override fun set(cell: Cell, value: E) {
-        values[cell.column][cell.row] = value
+        values[cell.row][cell.column] = value
     }
 
     override fun equals(other: Any?) = other is MatrixImpl<*> && other.values.equals(values)
