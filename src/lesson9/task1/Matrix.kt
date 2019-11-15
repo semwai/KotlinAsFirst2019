@@ -53,7 +53,11 @@ fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> {
  */
 class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : Matrix<E> {
 
-    private val values = MutableList(height) { MutableList(width + 1) { e } }
+    private val values = MutableList(height) { MutableList(width) { e } }
+
+    init {
+        require(width > 0 && height > 0)
+    }
 
     override fun get(row: Int, column: Int): E = values[row][column]
 
@@ -69,6 +73,6 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
 
     override fun equals(other: Any?) = other is MatrixImpl<*> && other.values.equals(values)
 
-    override fun toString(): String = values.toString()
+    override fun toString(): String = values.joinToString(separator = "\n") { "|\t" + it.joinToString("\t") + "\t|" }
 }
 

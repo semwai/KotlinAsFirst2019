@@ -4,6 +4,8 @@ package lesson9.task2
 
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
+import java.lang.IllegalStateException
+import kotlin.math.abs
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -69,8 +71,8 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
     var w = width
     var h = height
     while (i <= height * width) {
-        for (k in 0..width){
-            m[k,0] = i
+        for (k in 0..width) {
+            m[k, 0] = i
             i++
         }
         println(m.toString())
@@ -135,7 +137,21 @@ fun <E> rotate(matrix: Matrix<E>): Matrix<E> = TODO()
  * 1 2 3
  * 3 1 2
  */
-fun isLatinSquare(matrix: Matrix<Int>): Boolean = TODO()
+fun isLatinSquare(matrix: Matrix<Int>): Boolean {
+    if (matrix.width != matrix.height)
+        return false
+    for (i in 0 until matrix.height) {
+        val s = MutableList(matrix.width) { it + 1 }
+        val g = MutableList(matrix.width) { it + 1 }
+        for (j in 0 until matrix.width) {
+            s.remove(matrix[i, j])
+            g.remove(matrix[j, i])
+        }
+        if (s.isNotEmpty() || g.isNotEmpty())
+            return false
+    }
+    return true
+}
 
 /**
  * Средняя
@@ -261,7 +277,27 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> = TODO(this.toSt
  * 0  4 13  6
  * 3 10 11  8
  */
-fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> = TODO()
+
+fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
+    println(matrix)
+    println()
+    fun find(value: Int): Pair<Int, Int> {
+        for (i in 0 until matrix.height)
+            for (j in 0 until matrix.width)
+                if (matrix[i, j] == value)
+                    return i to j
+        throw IllegalStateException()
+    }
+    moves.forEach {
+        val g = find(it)
+        val p = find(0)
+        if (abs(p.first - g.first) > 1 || abs(p.second - g.second) > 1)
+            throw IllegalStateException()
+        matrix[p.first, p.second] = it
+        matrix[g.first, g.second] = 0
+    }
+    return matrix
+}
 
 /**
  * Очень сложная
