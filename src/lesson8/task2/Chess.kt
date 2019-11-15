@@ -2,6 +2,8 @@
 
 package lesson8.task2
 
+import kotlin.math.sign
+
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
  * Поэтому, обе координаты клетки (горизонталь row, вертикаль column) могут находиться в пределах от 1 до 8.
@@ -138,7 +140,13 @@ fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
  *          bishopTrajectory(Square(1, 3), Square(6, 8)) = listOf(Square(1, 3), Square(6, 8))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun bishopTrajectory(start: Square, end: Square): List<Square> {
+    return TODO()
+    if ((start.column + start.row) % 2 != (end.column + end.row) % 2)
+        return emptyList()
+    if (start == end)
+        return listOf(start)
+}
 
 /**
  * Средняя
@@ -176,7 +184,16 @@ fun kingMoveNumber(start: Square, end: Square): Int = TODO()
  *          kingTrajectory(Square(3, 5), Square(6, 2)) = listOf(Square(3, 5), Square(4, 4), Square(5, 3), Square(6, 2))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun kingTrajectory(start: Square, end: Square): List<Square> {
+    var (y, x) = start
+    val way = mutableListOf(start)
+    while (Square(y, x) != end) {
+        y += (end.column - y).sign
+        x += (end.row - x).sign
+        way.add(Square(y, x))
+    }
+    return way
+}
 
 /**
  * Сложная
