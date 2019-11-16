@@ -106,6 +106,7 @@ class Tests {
     @Test
     @Tag("Hard")
     fun firstDuplicateIndex() {
+        assertEquals(18, firstDuplicateIndex("l a h n a s e v s a a a h a w a a l a a"))
         assertEquals(-1, firstDuplicateIndex("i a i a"))
         assertEquals(-1, firstDuplicateIndex("Привет"))
         assertEquals(9, firstDuplicateIndex("Он пошёл в в школу"))

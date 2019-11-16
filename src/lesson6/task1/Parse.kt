@@ -215,7 +215,9 @@ fun firstDuplicateIndex(str: String): Int {
     while (i.hasNext()) {
         current = i.next()
         if (current == previous) {
-            return str.toLowerCase().indexOf("$previous $current")
+            val index = str.toLowerCase().indexOf("$previous $current")
+            if (index > 0)
+                return index
         }
         previous = current
     }
