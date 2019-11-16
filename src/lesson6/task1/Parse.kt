@@ -149,7 +149,7 @@ fun bestLongJump(jumps: String): Int {
     val template = ('0'..'9') + listOf('%', '-', ' ')
     if (!jumps.all { it in template })
         return -1
-    return jumps.split(" ").map { it.toIntOrNull() }.filterNotNull().maxBy { it } ?: -1
+    return jumps.split(" ").mapNotNull { it.toIntOrNull() }.maxBy { it } ?: -1
 }
 
 /**
