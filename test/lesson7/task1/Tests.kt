@@ -101,6 +101,12 @@ Basic, Ruby, Swift.
     @Test
     @Tag("Normal")
     fun centerFile() {
+        centerFile("input/alignFileByCenter.txt", "temp.txt")
+        assertFileContent(
+            "temp.txt",
+            "ббава"
+        )
+        File("temp.txt").delete()
         centerFile("input/center_in1.txt", "temp.txt")
         assertFileContent(
             "temp.txt",
@@ -152,6 +158,12 @@ Basic, Ruby, Swift.
         assertFileContent(
             "temp.txt",
             ""
+        )
+        File("temp.txt").delete()
+        alignFileByWidth("input/alignFileByWidth.txt", "temp.txt")
+        assertFileContent(
+            "temp.txt",
+            "бвввбаФ абба бвввбаФ -- бвфвбабвеб -- бвввбаФ\nвЪавббб                абГбЯ               --"
         )
         File("temp.txt").delete()
     }
@@ -226,6 +238,9 @@ Basic, Ruby, Swift.
         File("temp.txt").delete()
         chooseLongestChaoticWord("input/empty.txt", "temp.txt")
         assertFileContent("temp.txt", "")
+        File("temp.txt").delete()
+        chooseLongestChaoticWord("input/chooseLongestChaoticWord.txt", "temp.txt")
+        assertFileContent("temp.txt", "аб")
         File("temp.txt").delete()
     }
 

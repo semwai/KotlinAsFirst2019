@@ -146,9 +146,10 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    if (!jumps.all { it in ('0'..'9') + listOf('%', '-', ' ') })
+    val template = ('0'..'9') + listOf('%', '-', ' ')
+    if (!jumps.all { it in template })
         return -1
-    return jumps.split(" ").map { it.toIntOrNull() }.filter { it != null }.maxBy { it ?: -1 } ?: -1
+    return jumps.split(" ").map { it.toIntOrNull() }.filterNotNull().maxBy { it } ?: -1
 }
 
 /**
@@ -174,11 +175,11 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
+    val template = "(\\d+(\\s[+|-]\\s)|(\\d+\$))+".toRegex()
     require(
-        expression.isNotEmpty() && expression.split("\\d+(\\s[+|-]\\s)|(\\d+\$)".toRegex()).all { it.isEmpty() }
+        expression.isNotEmpty() && template.matches(expression)
     )
     val arr = expression.split(" ")
-    require(arr.all { if (it.length == 1) true else !(it[0] == '+' || it[0] == '-') })
     var out = 0
     var isNum = true
     var sign = 1
@@ -208,10 +209,15 @@ fun plusMinus(expression: String): Int {
  */
 fun firstDuplicateIndex(str: String): Int {
     val arr = str.split(" ").map { it.toLowerCase() }
-    val s = arr.filter { str -> arr.count { str == it } > 1 }
-    s.forEachIndexed { i, c ->
-        if (c == s[i + 1])
-            return str.toLowerCase().indexOf("$c $c")
+    val i = arr.filter { str -> arr.count { str == it } > 1 }.iterator()
+    var current: String
+    var previous = ""
+    while (i.hasNext()) {
+        current = i.next()
+        if (current == previous) {
+            return str.toLowerCase().indexOf("$previous $current")
+        }
+        previous = current
     }
     return -1
 }
@@ -255,20 +261,20 @@ fun fromRoman(roman: String): Int {
     if (!roman.any { it in "IVXLCDM" } || roman.isEmpty())
         return -1
     //Рисмкое представление, обозначение в десятичной, используется ли только 1 раз (можно поставить XX, но нелья IXIX)
-    val rome = mutableListOf(
-        Triple('m', 900, true),
-        Triple('M', 1000, false),
-        Triple('d', 400, true),
-        Triple('D', 500, false),
-        Triple('c', 90, true),
-        Triple('C', 100, false),
-        Triple('l', 40, true),
-        Triple('L', 50, false),
-        Triple('x', 9, true),
-        Triple('X', 10, false),
-        Triple('v', 4, true),
-        Triple('V', 5, false),
-        Triple('I', 1, false)
+    val rome = mutableMapOf(
+        'm' to Pair(900, true),
+        'M' to Pair(1000, false),
+        'd' to Pair(400, true),
+        'D' to Pair(500, false),
+        'c' to Pair(90, true),
+        'C' to Pair(100, false),
+        'l' to Pair(40, true),
+        'L' to Pair(50, false),
+        'x' to Pair(9, true),
+        'X' to Pair(10, false),
+        'v' to Pair(4, true),
+        'V' to Pair(5, false),
+        'I' to Pair(1, false)
     )
     var out = 0
     var str = roman
@@ -278,10 +284,10 @@ fun fromRoman(roman: String): Int {
         str = str.replace(it.key, it.value)
     }
     str.forEach { c ->
-        val elem = rome.find { it.first == c }
-        out += elem?.second ?: return -1
-        if (elem.third) { // удаляем уже использованный элемент по типу IV IX и тд
-            rome.remove(elem)
+        val elem = rome[c]
+        out += elem?.first ?: return -1
+        if (elem.second) { // удаляем уже использованный элемент по типу IV IX и тд
+            rome.remove(c)
         }
     }
     return out
@@ -323,57 +329,4 @@ fun fromRoman(roman: String): Int {
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    var myLimit = limit
-    //проверка на ошибочный ввод команд
-    require(commands.all { it in listOf('>', '<', '+', '-', '[', ']', ' ') })
-    //если ] в коде раньше, чем [
-    require(commands.indexOf(']') >= commands.indexOf('['))
-    require(commands.count { it == '[' } - commands.count { it == ']' } == 0)
-    val data = IntArray(cells) { 0 }
-    var i = cells / 2 // позиция датчика
-    var ip = 0 // номер текущей выполняемой команды
-    var b = 0
-    //начинаем выполнение инструкций
-    while (ip < commands.length) {
-        if (myLimit < 0)
-            break
-        //println("lim = $myLimit ip = $ip,\ti = $i,\tcommand = ${commands[ip]},box=${data[i]}  ,data = ${data.toList().toString()}")
-        when (commands[ip]) {
-            '>' -> if (i >= cells - 1) throw IllegalStateException() else i++
-            '<' -> if (i <= 0) throw IllegalStateException() else i--
-            '+' -> data[i]++
-            '-' -> data[i]--
-            '[' -> {
-                if (data[i] == 0) {
-                    b++
-                    while (b > 0) {
-                        ip++
-                        myLimit--
-                        if (commands[ip] == '[')
-                            b++
-                        if (commands[ip] == ']')
-                            b--
-                    }
-                }
-            }
-            ']' -> {
-                if (data[i] != 0) {
-                    b++
-                    while (b > 0) {
-                        ip--
-                        if (commands[ip] == '[')
-                            b--
-                        if (commands[ip] == ']')
-                            b++
-                    }
-                }
-                print(commands[ip])
-            }
-        }
-        //println("lim = $myLimit ip = $ip,\ti = $i,\tcommand = ${commands[ip]},box=${data[i]}  ,data = ${data.toList().toString()}")
-        ip++
-        myLimit--
-    }
-    return data.toList()
-}
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()

@@ -112,8 +112,8 @@ data class Segment(val begin: Point, val end: Point) {
 fun diameter(vararg points: Point): Segment {
     require(points.size > 1)
     //для каждой точки находим самую дальнюю для нее
-    val s = points.map { p ->
-        points.map { it }.maxBy { sqr(it.x - p.x) + sqr(it.y - p.y) }
+    val s = points.map { (x, y) ->
+        points.map { it }.maxBy { sqr(it.x - x) + sqr(it.y - y) }
     }
     //преобразовываем в вид [точка1-самая дальняя для точки1, точка2-самая дальняя для точки2..]
     val g = points zip s
@@ -215,21 +215,7 @@ fun bisectorByPoints(a: Point, b: Point): Line {
  * Задан список из n окружностей на плоскости. Найти пару наименее удалённых из них.
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
-fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
-    return TODO()
-    require(circles.size > 1)
-    //для каждой окружности находим самую ближнюю для нее
-    val s = circles.map { p ->
-        circles.map { it }.filter { !p.equals(it) }
-            .minBy { sqr(it.center.x - p.center.x - p.radius - it.radius) + sqr(it.center.y - p.center.y - p.radius - it.radius) }
-    }
-    val g = circles zip s
-    val out =
-        g.minBy { sqr(it.first.center.x - it.second!!.center.x - it.first.radius - it.second!!.radius) + sqr(it.first.center.y - it.second!!.center.y - it.first.radius - it.second!!.radius) }
-    return Circle(out!!.second!!.center, out.second!!.radius) to Circle(out!!.first.center, out.first.radius)
-
-
-}
+fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
 
 /**
  * Сложная
@@ -264,11 +250,9 @@ fun minContainingCircle(vararg points: Point): Circle {
     if (points.size == 2)
         return circleByThreePoints(points[0], points[1], points[1])
 
-    val s = points.sortedBy { sqr(it.x) + sqr(it.y) }
-    val c3 = circleByThreePoints(s[0], s[1], s[2])
-    for ((x, y) in s)
-        if (c3.radius > sqrt(sqr(x - c3.center.x) + sqr(y - c3.center.y)))
-            return circleByThreePoints(s[0], s[1], s[1])
-    return c3
+    println(
+        points.mapIndexed { i, v -> points.map { it }.take(i) }
+    )
+    return TODO()
 }
 
