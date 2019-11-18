@@ -105,11 +105,10 @@ fun sibilants(inputName: String, outputName: String): Unit = TODO()
  */
 fun centerFile(inputName: String, outputName: String) {
     val outputStream = File(outputName).bufferedWriter()
-    val f = File(inputName).readLines()
+    val f = File(inputName).readLines().map { it.trim() }
     val maxLen = f.maxBy { it.length }?.length ?: 0
     for (line in f) {
-        val temp = line.trim()
-        val out = if (temp.split(" ").isEmpty()) temp else " ".repeat((maxLen - temp.length) / 2) + temp
+        val out = if (line.split(" ").isEmpty()) line else " ".repeat((maxLen - line.length) / 2) + line
         outputStream.write(out)
         outputStream.newLine()
     }
@@ -148,7 +147,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val f = File(inputName).readLines()
     val maxLen = f.map { it.trim() }.maxBy { it.length }?.length ?: 0
     for (line in f) {
-        val l = line.trim().split("[\\s]+".toRegex())
+        val l = line.trim().split("(\\s)+".toRegex())
         if (l.size < 2) {
             outputStream.write(l[0])
             outputStream.newLine()
@@ -270,8 +269,14 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
             it.toSet().joinToString(separator = "") == it
         }
         .sortedBy { -it.length }
-        .groupBy { it.length }.map { it.value }.first()
-    File(outputName).writeText(text.filter { it.toLowerCase() in keys }.joinToString(separator = ", "))
+        .groupBy { it.length }.map { it.value }
+    if (keys.isNotEmpty()){
+        val kf = keys.first()
+        File(outputName).writeText(text.filter { it.toLowerCase() in kf }.joinToString(separator = ", "))
+    } else {
+        File(outputName).writeText("")
+    }
+
 }
 /**
  * Сложная

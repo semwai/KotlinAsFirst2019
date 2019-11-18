@@ -208,16 +208,13 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    val arr = str.split(" ").map { it.toLowerCase() }
-    val i = arr.filter { str -> arr.count { str == it } > 1 }.iterator()
+    val i = str.split(" ").map { it.toLowerCase() }.iterator()
     var current: String
     var previous = ""
     while (i.hasNext()) {
         current = i.next()
         if (current == previous) {
-            val index = str.toLowerCase().indexOf("$previous $current")
-            if (index > 0)
-                return index
+            return str.toLowerCase().indexOf("$previous $current")
         }
         previous = current
     }

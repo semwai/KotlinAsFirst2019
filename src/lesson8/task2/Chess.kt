@@ -39,7 +39,7 @@ fun square(notation: String): Square {
     require(notation.length == 2)
     val (col, row) = notation.toList()
     require(col in 'a'..'h' && row in '1'..'8')
-    return Square((col - 'a' + 1).toInt(), (row - '0').toInt())
+    return Square((col - 'a' + 1), (row - '0'))
 }
 
 /**

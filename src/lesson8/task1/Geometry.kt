@@ -251,7 +251,7 @@ fun minContainingCircle(vararg points: Point): Circle {
         return circleByThreePoints(points[0], points[1], points[1])
 
     println(
-        points.mapIndexed { i, v -> points.map { it }.take(i) }
+        points.mapIndexed { i, _ -> points.map { it }.take(i) }
     )
     return TODO()
 }
