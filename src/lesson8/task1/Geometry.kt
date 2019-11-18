@@ -118,8 +118,9 @@ fun diameter(vararg points: Point): Segment {
     //преобразовываем в вид [точка1-самая дальняя для точки1, точка2-самая дальняя для точки2..]
     val g = points zip s
     val out = g.maxBy { sqr(it.first.x - it.second!!.x) + sqr(it.first.y - it.second!!.y) }
-    //вторая точка имеет тип Point?, а не Point. NullException'а быть не должно, т.к. у любой точки есть пара всегда
-    return Segment(out!!.first, Point(out.second!!.x, out.second!!.y))
+    val first = out!!.first
+    var second = out?.second ?: first
+    return Segment(first,second)
 }
 
 /**
@@ -243,16 +244,4 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle {
-    require(points.isNotEmpty())
-    if (points.size == 1)
-        return Circle(Point(points[0].x, points[0].y), 0.0)
-    if (points.size == 2)
-        return circleByThreePoints(points[0], points[1], points[1])
-
-    println(
-        points.mapIndexed { i, _ -> points.map { it }.take(i) }
-    )
-    return TODO()
-}
-
+fun minContainingCircle(vararg points: Point): Circle = TODO()

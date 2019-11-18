@@ -167,6 +167,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     }
     outputStream.close()
 }
+
 /**
  * Средняя
  *
@@ -260,7 +261,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     val text = File(inputName).readLines()
-    if (text.isEmpty()){
+    if (text.isEmpty()) {
         File(outputName).writeText("")
         return
     }
@@ -270,7 +271,7 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
         }
         .sortedBy { -it.length }
         .groupBy { it.length }.map { it.value }
-    if (keys.isNotEmpty()){
+    if (keys.isNotEmpty()) {
         val kf = keys.first()
         File(outputName).writeText(text.filter { it.toLowerCase() in kf }.joinToString(separator = ", "))
     } else {
@@ -278,6 +279,7 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     }
 
 }
+
 /**
  * Сложная
  *
@@ -323,8 +325,32 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+val generateHTMLbody = { it: String ->
+    """
+<html>
+    <body>
+    $it
+    </body>
+</html>    
+"""
+}
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    var content = "\n" + File(inputName).readLines().joinToString(separator = "\n")
+
+    mapOf(
+        "**" to ("<b>" to "</b>"),
+        "*" to ("<i>" to "</i>"),
+        "~~" to ("<s>" to "</s>")
+    ).forEach { (key, value) ->
+        content = content.split(key).withIndex()
+            .joinToString("") { if (it.index % 2 == 0) it.value else "${value.first}${it.value}${value.second}" }
+    }
+
+    content = content.split("\n\n")
+        .joinToString("") { "<p>${it}</p>" }
+
+    File(outputName).writeText(generateHTMLbody(content))
 }
 
 /**
