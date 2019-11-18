@@ -338,6 +338,8 @@ val generateHTMLbody = { it: String ->
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var content = "\n" + File(inputName).readLines().joinToString(separator = "\n")
 
+    content.replace("\n{2,}".toRegex(), "\n\n")
+
     mapOf(
         "**" to ("<b>" to "</b>"),
         "*" to ("<i>" to "</i>"),
