@@ -271,9 +271,14 @@ Basic, Ruby, Swift.
     fun markdownToHtmlSimple() {
         markdownToHtmlSimple("input/markdown_simple.md", "temp.html")
         checkHtmlSimpleExample()
-        /*markdownToHtmlSimple("input/markdownToHtmlSimpleSource.txt", "temp.html")
-        assertFileContent("input/markdownToHtmlSimpleExpected.txt", File("temp.html").readText())
-        File("temp.html").delete()*/
+//        markdownToHtmlSimple("input/mdths.txt", "temp.html")
+//        assertEquals(
+//            File("temp.html").readText().replace(Regex("[\\s\\n\\t]"), "")
+//            , File("input/mdthsideal.txt").readText().replace(Regex("[\\s\\n\\t]"), "")
+//        )
+//        File("temp.html").delete()
+
+
     }
 
     private fun checkHtmlListsExample() {

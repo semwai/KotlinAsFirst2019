@@ -209,10 +209,9 @@ fun plusMinus(expression: String): Int {
  */
 fun firstDuplicateIndex(str: String): Int {
     val i = str.split(" ").map { it.toLowerCase() }.iterator()
-    var current: String
     var previous = ""
     while (i.hasNext()) {
-        current = i.next()
+        val current = i.next()
         if (current == previous) {
             return str.toLowerCase().indexOf("$previous $current")
         }

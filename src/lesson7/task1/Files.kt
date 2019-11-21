@@ -147,7 +147,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val f = File(inputName).readLines()
     val maxLen = f.map { it.trim() }.maxBy { it.length }?.length ?: 0
     for (line in f) {
-        val l = line.trim().split("(\\s)+".toRegex())
+        val l = line.trim().split("\\s+".toRegex())
         if (l.size < 2) {
             outputStream.write(l[0])
             outputStream.newLine()
@@ -336,9 +336,7 @@ val generateHTMLbody = { it: String ->
 }
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    var content = "\n" + File(inputName).readLines().joinToString(separator = "\n")
-
-    content.replace("\n{2,}".toRegex(), "\n\n")
+    var content = File(inputName).readText()
 
     mapOf(
         "**" to ("<b>" to "</b>"),
@@ -349,7 +347,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             .joinToString("") { if (it.index % 2 == 0) it.value else "${value.first}${it.value}${value.second}" }
     }
 
-    content = content.split("\n\n")
+    content = content.split(Regex("\\s{3,}"))
         .joinToString("") { "<p>${it}</p>" }
 
     File(outputName).writeText(generateHTMLbody(content))
