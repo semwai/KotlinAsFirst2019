@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import lesson3.task1.digitNumber
+import ru.spbstu.kotlin.generate.util.times
 import java.io.File
 import java.lang.Exception
 
@@ -347,7 +348,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             .joinToString("") { if (it.index % 2 == 0) it.value else "${value.first}${it.value}${value.second}" }
     }
 
-    content = content.split(Regex("(\r\n\r\n)|(\n\n)")).joinToString("") { "<p>${it}</p>" }
+    content = content.split(Regex("\\s{3,}")).joinToString("") { "<p>${it}</p>" }
 
     File(outputName).writeText(generateHTMLbody(content))
 }
