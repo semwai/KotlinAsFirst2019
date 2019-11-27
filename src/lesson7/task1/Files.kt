@@ -347,8 +347,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         content = content.split(key).withIndex()
             .joinToString("") { if (it.index % 2 == 0) it.value else "${value.first}${it.value}${value.second}" }
     }
-
-    content = content.split(Regex("\\s{3,}")).joinToString("") { "<p>${it}</p>" }
+    content = content.replace(Regex("\n{2}"),"#")
+    //content = content.split("\n\n").joinToString("") { "<p>${it}</p>" }
 
     File(outputName).writeText(generateHTMLbody(content))
 }
