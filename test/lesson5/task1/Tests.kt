@@ -319,6 +319,20 @@ class Tests {
     @Tag("Impossible")
     fun bagPacking() {
         assertEquals(
+            setOf("Кубок", "Слиток", "a", "b"),
+            bagPacking(
+                mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000), "a" to (500 to 2000), "b" to (1000 to 5000)),
+                4500
+            )
+        )
+        assertEquals(
+            setOf("Кубок", "Слиток"),
+            bagPacking(
+                mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
+                4500
+            )
+        )
+        assertEquals(
             setOf("Кубок"),
             bagPacking(
                 mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
@@ -330,13 +344,6 @@ class Tests {
             bagPacking(
                 mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
                 450
-            )
-        )
-        assertEquals(
-            setOf("Кубок","Слиток"),
-            bagPacking(
-                mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
-                4500
             )
         )
     }
