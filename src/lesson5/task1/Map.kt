@@ -367,7 +367,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
                     memory[(item.key + it.key).toMutableSet()] =
                         Pair(item.value.first + it.value.first, it.value.second + item.value.second)
             }
-            memory = memory.filter { it.value.first < capacity }.toMutableMap()
+            memory = memory.filter { it.value.first <= capacity }.toMutableMap()
         }
         templates = memory.toMutableMap()
     }
