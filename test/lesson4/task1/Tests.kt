@@ -241,4 +241,32 @@ class Tests {
         assertEquals("девятьсот тысяч", russian(900000))
         assertEquals("двенадцать", russian(12))
     }
+    /*
+    @Test
+    fun longestSequence() {
+        assertEquals(
+            listOf(1, 2, 3),
+            longestSequence(listOf(1, 2, 3, 0, 9, 5, 15))
+        )
+        assertEquals(
+            listOf(1, 2, 3),
+            longestSequence(listOf(1, 2, 0, 3, 0, 9, 5, 15, -2, -5, Int.MIN_VALUE, 3333, 1, 2, 3, -5))
+        )
+        assertEquals(
+            emptyList<Int>(),
+            longestSequence(listOf(5, 4, 3, 2, 1, 0))
+        )
+        assertEquals(
+            listOf('1', '2', '3'),
+            longestSequence("123095".toList())
+        )
+        assertEquals(
+            listOf(0.0, 0.1, 0.2),
+            longestSequence(listOf(0.0, 0.1, 0.2, 0.0))
+        )
+        assertEquals(
+            listOf("AAA", "BBB", "CCC"),
+            longestSequence(listOf("AAA", "BBB", "CCC", "AAA"))
+        )
+    }*/
 }

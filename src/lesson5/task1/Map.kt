@@ -349,15 +349,12 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> emptySet()
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    /*var currentCap = capacity // оставшийся вес в сумке
-    var out = mutableSetOf<String>() // список предметов
-    var data = mutableListOf<Triple<String, Int, Int>>()
-    var ost = treasures.filter { it.value.first < currentCap }
-    //преобразуем в удобный вид
+    /*var memory: MutableMap<MutableSet<String>, Pair<Int, Int>> = mutableMapOf()
 
-    ost.map { data.add(Triple(it.key, it.value.first, it.value.second)) }
-    data.sortBy { it.third > 1 }
-    println(data.toString())*/
+    treasures.forEach {
+        memory[mutableSetOf(it.key)] = it.value
+    }
+    memory = memory.filter { it.value.first <= capacity }.toMutableMap()
+    println(memory)*/
     return TODO()
-    //var minCap = // самый легкий предмет в инвентаре
 }

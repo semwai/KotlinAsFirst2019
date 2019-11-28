@@ -351,3 +351,26 @@ fun russian(n: Int): String {
 
     return TODO()
 }
+
+/*
+тестовое задание
+fun <T : Comparable<T>> longestSequence(input: List<T>): List<T> {
+    val buffer = mutableListOf<T>()
+    val out = mutableListOf<T>()
+    input.forEach {
+        if (buffer.isNotEmpty() && buffer.last() > it) {
+            buffer.clear()
+            //println("")
+        }
+        //println("$it add to $buffer")
+        buffer.add(it)
+
+        if (buffer.size == out.size) {
+            out.clear()
+            out.addAll(buffer)
+        } else if (buffer.size > out.size) {
+            out.add(it)
+        }
+    }
+    return if (out.size > 1) out else emptyList()
+}*/
