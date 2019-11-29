@@ -77,7 +77,7 @@ data class Circle(val center: Point, val radius: Double) {
      * Расстояние между пересекающимися окружностями считать равным 0.0.
      */
     fun distance(other: Circle): Double {
-        val d = sqrt(sqr(center.x - other.center.x) + sqr(center.y - other.center.y))
+        val d = center.distance(other.center)
         val r = radius + other.radius
         return if (d > r) return d - r else 0.0
 
@@ -88,7 +88,7 @@ data class Circle(val center: Point, val radius: Double) {
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = sqrt(sqr(center.x - p.x) + sqr(center.y - p.y)) <= radius
+    fun contains(p: Point): Boolean = p.distance(center) <= radius
 
 }
 
@@ -117,10 +117,10 @@ fun diameter(vararg points: Point): Segment {
     }
     //преобразовываем в вид [точка1-самая дальняя для точки1, точка2-самая дальняя для точки2..]
     val g = points zip s
-    val out = g.maxBy { sqr(it.first.x - it.second!!.x) + sqr(it.first.y - it.second!!.y) }
+    val out = g.maxBy { it.first.distance(it.second!!) }
     val first = out!!.first
-    var second = out?.second ?: first
-    return Segment(first,second)
+    val second = out.second ?: first
+    return Segment(first, second)
 }
 
 /**
@@ -134,7 +134,7 @@ fun circleByDiameter(diameter: Segment): Circle {
         (diameter.begin.x + diameter.end.x) / 2,
         (diameter.begin.y + diameter.end.y) / 2
     )
-    val r = sqrt(sqr(diameter.begin.x - center.x) + sqr(diameter.begin.y - center.y))
+    val r = diameter.begin.distance(center)
     return Circle(center, r)
 }
 
@@ -158,13 +158,6 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
     fun crossPoint(other: Line): Point {
-        /*
-         k1x1 + k2y1 = b1
-         k3x2 + k4y2 = b2
-         -x*sin(angle)+y*cos(angle) = b
-         -x*sin(other.angle)+y*cos(other.angle) = other.b
-         решаем методом крамера c помощью трех определителей
-         */
         val opr = -sin(angle) * cos(other.angle) + sin(other.angle) * cos(angle)
         val oprX = b * cos(other.angle) - other.b * cos(angle)
         val oprY = -sin(angle) * other.b + sin(other.angle) * b
@@ -201,14 +194,9 @@ fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line {
-    val center = Point(
-        (a.x + b.x) / 2,
-        (a.y + b.y) / 2
-    )
-    val angle = (lineByPoints(a, b).angle + PI / 2) % PI
-    return Line(center, angle)
-}
+fun bisectorByPoints(a: Point, b: Point) =
+    Line(circleByDiameter(Segment(a, b)).center, (lineByPoints(a, b).angle + PI / 2) % PI)
+
 
 /**
  * Средняя
