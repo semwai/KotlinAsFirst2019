@@ -337,7 +337,7 @@ val generateHTMLbody = { body: String ->
 }
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    var content = File(inputName).readText()
+    var content = File(inputName).readText().trim()
 
     mapOf(
         "**" to ("<b>" to "</b>"),
