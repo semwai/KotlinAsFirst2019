@@ -350,6 +350,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     val memory: MutableMap<MutableSet<String>, Pair<Int, Int>> = mutableMapOf()
+    var max: MutableSet<String> = mutableSetOf()
     treasures.forEach {
         if (it.value.first <= capacity) {
             memory[mutableSetOf(it.key)] = it.value
@@ -365,7 +366,11 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
                         Pair(weight, it.value.second + item.value.second)
             }
         }
+        templates.maxBy { it.value.second }?.key.apply {
+            if (this != null)
+                max = this
+        }
         templates = memory.filter { it.key.size >= g }.toMutableMap()
     }
-    return templates.maxBy { it.value.second }?.key ?: setOf()
+    return max
 }
