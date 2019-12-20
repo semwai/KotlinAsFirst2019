@@ -43,7 +43,7 @@ interface Matrix<E> {
  */
 fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> {
     require(width > 0 && height >= 0)
-    return MatrixImpl<E>(height, width, e)
+    return MatrixImpl(height, width, e)
 }
 
 /**
@@ -71,8 +71,14 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
         values[cell.row][cell.column] = value
     }
 
-    override fun equals(other: Any?) = other is MatrixImpl<*> && other.values.equals(values)
+    override fun equals(other: Any?) = other is MatrixImpl<*> && other.values == values
 
     override fun toString(): String = values.joinToString(separator = "\n") { "|\t" + it.joinToString("\t") + "\t|" }
+    override fun hashCode(): Int {
+        var result = height
+        result = 31 * result + width
+        result = 31 * result + values.hashCode()
+        return result
+    }
 }
 

@@ -279,8 +279,6 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> = TODO(this.toSt
  */
 
 fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
-    println(matrix)
-    println()
     fun find(value: Int): Pair<Int, Int> {
         for (i in 0 until matrix.height)
             for (j in 0 until matrix.width)
@@ -288,13 +286,26 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
                     return i to j
         throw IllegalStateException()
     }
+
+    var nullP = find(0)
+    var numP: Pair<Int, Int>
+    fun findNearZero(value: Int): Pair<Int, Int> {
+        if (nullP.first >= 1 && matrix[nullP.first - 1, nullP.second] == value)
+            return nullP.first - 1 to nullP.second
+        if (nullP.first < matrix.height - 1 && matrix[nullP.first + 1, nullP.second] == value)
+            return nullP.first + 1 to nullP.second
+        if (nullP.second >= 1 && matrix[nullP.first, nullP.second - 1] == value)
+            return nullP.first to nullP.second - 1
+        if (nullP.second < matrix.height - 1 && matrix[nullP.first, nullP.second + 1] == value)
+            return nullP.first to nullP.second + 1
+        throw IllegalStateException()
+    }
+
     moves.forEach {
-        val g = find(it)
-        val p = find(0)
-        if (abs(p.first - g.first) > 1 || abs(p.second - g.second) > 1)
-            throw IllegalStateException()
-        matrix[p.first, p.second] = it
-        matrix[g.first, g.second] = 0
+        numP = findNearZero(it)
+        matrix[nullP.first, nullP.second] = it
+        matrix[numP.first, numP.second] = 0
+        nullP = numP
     }
     return matrix
 }

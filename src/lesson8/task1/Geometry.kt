@@ -119,7 +119,7 @@ fun diameter(vararg points: Point): Segment {
     val g = points zip s
     val out = g.maxBy { it.first.distance(it.second!!) }
     val first = out!!.first
-    val second = out.second ?: first
+    val second = out.second!!
     return Segment(first, second)
 }
 
